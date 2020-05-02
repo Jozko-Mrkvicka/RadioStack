@@ -33,6 +33,7 @@ param_comp = -mmcu=atmega8 -Wall -std=c99 -Werror
 
 param_link = -mmcu=atmega8 -Wall -std=c99 -Werror -static
 # -pedantic
+
 compile = $(CC) $(CFLAGS) $(param_comp) $(incl) -c $< -o bin/$@
 
 link = $(CC) $(param_link) bin/$< $(common_obj) $(modules_obj) -o bin/$@

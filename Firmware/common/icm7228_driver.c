@@ -53,8 +53,8 @@ void display_driver_convert_data(char* str_1_input,
 	data_3_out[1] = str_4[2];
 	data_3_out[2] = str_4[3];
 	data_3_out[3] = str_4[4];
-	data_3_out[4] = CHAR_DASH;
-	data_3_out[5] = CHAR_DASH;
+	data_3_out[4] = 8; //CHAR_DASH; //pokus
+	data_3_out[5] = 8; //CHAR_DASH; //pokus
 	data_3_out[6] = CHAR_DASH;
 	data_3_out[7] = CHAR_DASH;
 }

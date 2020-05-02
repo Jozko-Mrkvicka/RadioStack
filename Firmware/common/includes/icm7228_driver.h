@@ -7,13 +7,15 @@
 
 #include <string.h>
 
+#define DIPLAY_DRIVER_MAX_DATA_VALUE	15
+#define DIPLAY_DRIVER_STRING_SIZE 		5
+#define DIPLAY_DRIVER_DATA_SIZE			8
+#define DIPLAY_DRIVER_MESSAGE_SIZE		18
+
 #define MODE_HIGH 				0x10
 #define DRIVER_1_WRITE_HIGH 	0x20
 #define DRIVER_2_WRITE_HIGH 	0x40
 #define DRIVER_3_WRITE_HIGH 	0x80
-
-#define DIPLAY_DRIVER_MAX_DATA_VALUE	15
-#define DIPLAY_DRIVER_STRING_SIZE 		5
 
 #define ASCII_ZERO  	48
 #define ASCII_MINUS 	45
@@ -35,14 +37,19 @@
 #define CHAR_BLANK  15
 
 
+// This function ...
 void display_driver_trunc_data_to_max_value(char* data);
 
+// This function ...
 int display_driver_select_write_signal(int disp_num);
 
+// This function ...
 void display_driver_create_message(char* message, char* data, int disp_num);
 
+// This function ...
 void display_driver_convert_char_to_num(char* str);
 
+// This function ...
 void display_driver_convert_data(char* str_1_input,
 								 char* str_2_input,
 								 char* str_3_input,
