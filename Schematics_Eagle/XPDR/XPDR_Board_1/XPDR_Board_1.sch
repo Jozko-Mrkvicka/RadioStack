@@ -57,7 +57,7 @@
 </layers>
 <schematic xreflabel="%F%N/%S.%C%R" xrefpart="/%S.%C%R">
 <libraries>
-<library name="RadioStack_v2">
+<library name="library">
 <packages>
 <package name="PEC11R">
 <pad name="A" x="0" y="0" drill="0.889" diameter="1.27" shape="offset" rot="R270"/>
@@ -93,17 +93,19 @@
 <pad name="8" x="5.08" y="-5.08" drill="0.889" diameter="1.27" shape="offset" rot="R180"/>
 <pad name="9" x="5.08" y="-2.54" drill="0.889" diameter="1.27" shape="offset" rot="R180"/>
 <pad name="10" x="5.08" y="0" drill="0.889" diameter="1.27" shape="offset" rot="R180"/>
-<text x="0" y="0" size="1.27" layer="48">1</text>
-<text x="0" y="-10.16" size="1.27" layer="48">5</text>
-<text x="3.81" y="-10.16" size="1.27" layer="48">6</text>
-<text x="3.81" y="0" size="1.27" layer="48">10</text>
-<text x="3.81" y="-7.62" size="1.27" layer="48">DP</text>
-<text x="-0.675" y="2.435" size="1.27" layer="48" ratio="7">&gt;NAME</text>
+<text x="-0.635" y="0" size="0.762" layer="48" align="center-left">1/vcc</text>
+<text x="-0.635" y="-10.16" size="0.762" layer="48" align="center-left">5/d</text>
+<text x="5.715" y="-10.16" size="0.762" layer="48" align="center-right">6/vcc</text>
+<text x="5.715" y="0" size="0.762" layer="48" align="center-right">10/a</text>
+<text x="5.715" y="-7.62" size="0.762" layer="48" align="center-right">7/dp</text>
+<text x="-0.635" y="-2.54" size="0.762" layer="48" align="center-left">2/f</text>
+<text x="-0.635" y="-5.08" size="0.762" layer="48" align="center-left">3/g</text>
+<text x="-0.635" y="-7.62" size="0.762" layer="48" align="center-left">4/e</text>
+<text x="5.715" y="-5.08" size="0.762" layer="48" align="center-right">8/c</text>
+<text x="5.715" y="-2.54" size="0.762" layer="48" align="center-right">9/b</text>
 </package>
 <package name="P1-0S">
-<wire x1="-1.27" y1="-6.35" x2="6.35" y2="-6.35" width="0.127" layer="21"/>
 <wire x1="6.35" y1="-6.35" x2="6.35" y2="1.27" width="0.127" layer="21"/>
-<wire x1="6.35" y1="1.27" x2="-1.27" y2="1.27" width="0.127" layer="21"/>
 <wire x1="-1.27" y1="1.27" x2="-1.27" y2="-6.35" width="0.127" layer="21"/>
 <pad name="1" x="0" y="0" drill="0.762" diameter="1.27" shape="offset" rot="R90"/>
 <pad name="2" x="2.54" y="0" drill="0.762" diameter="1.27" shape="offset" rot="R90"/>
@@ -117,21 +119,26 @@
 <wire x1="5.08" y1="-1.27" x2="5.08" y2="-1.905" width="0.127" layer="21"/>
 <wire x1="5.08" y1="-1.905" x2="2.54" y2="-1.905" width="0.127" layer="21"/>
 <wire x1="2.54" y1="-1.905" x2="2.54" y2="-1.27" width="0.127" layer="21"/>
-<text x="-1.905" y="-5.715" size="1.27" layer="48" rot="R90">&gt;NAME</text>
+<wire x1="-1.27" y1="1.27" x2="-0.873125" y2="1.27" width="0.127" layer="21"/>
+<wire x1="0.873125" y1="1.27" x2="1.666875" y2="1.27" width="0.127" layer="21"/>
+<wire x1="3.413125" y1="1.27" x2="4.206875" y2="1.27" width="0.127" layer="21"/>
+<wire x1="5.953125" y1="1.27" x2="6.35" y2="1.27" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-6.35" x2="-0.873125" y2="-6.35" width="0.127" layer="21"/>
+<wire x1="0.873125" y1="-6.35" x2="1.666875" y2="-6.35" width="0.127" layer="21"/>
+<wire x1="3.413125" y1="-6.35" x2="4.206875" y2="-6.35" width="0.127" layer="21"/>
+<wire x1="5.953125" y1="-6.35" x2="6.35" y2="-6.35" width="0.127" layer="21"/>
 </package>
 <package name="LED_5MM">
-<circle x="1.27" y="0" radius="2.54" width="0.127" layer="21"/>
 <pad name="P$1" x="2.54" y="0" drill="0.762" diameter="1.27" shape="offset"/>
 <pad name="P$2" x="0" y="0" drill="0.762" diameter="1.27" shape="offset" rot="R180"/>
-<wire x1="0" y1="1.905" x2="0" y2="0" width="0.127" layer="21"/>
-<wire x1="0" y1="0" x2="0" y2="-1.905" width="0.127" layer="21"/>
-<wire x1="0" y1="0" x2="2.54" y2="-1.905" width="0.127" layer="21"/>
-<wire x1="2.54" y1="-1.905" x2="2.54" y2="0" width="0.127" layer="21"/>
-<wire x1="2.54" y1="0" x2="2.54" y2="1.905" width="0.127" layer="21"/>
-<wire x1="2.54" y1="1.905" x2="0" y2="0" width="0.127" layer="21"/>
-<wire x1="2.54" y1="0" x2="3.81" y2="0" width="0.127" layer="21"/>
-<wire x1="0" y1="0" x2="-1.23" y2="0" width="0.127" layer="21"/>
-<text x="0" y="2.54" size="1.27" layer="48">&gt;NAME</text>
+<wire x1="2.54" y1="-1.905" x2="2.54" y2="-0.873125" width="0.127" layer="21"/>
+<wire x1="2.54" y1="0.873125" x2="2.54" y2="1.905" width="0.127" layer="21"/>
+<wire x1="2.54" y1="-1.905" x2="0.635" y2="-0.555625" width="0.127" layer="21"/>
+<wire x1="2.54" y1="1.905" x2="0.635" y2="0.555625" width="0.127" layer="21"/>
+<wire x1="0" y1="1.905" x2="0" y2="0.873125" width="0.127" layer="21"/>
+<wire x1="0" y1="-0.873125" x2="0" y2="-1.905" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="0.873125" x2="3.81" y2="0.873125" width="0.127" layer="21" curve="-142.08993"/>
+<wire x1="3.81" y1="-0.873125" x2="-1.27" y2="-0.873125" width="0.127" layer="21" curve="-142.08993"/>
 </package>
 <package name="LISTA_2X5">
 <pad name="5" x="0" y="-10.16" drill="0.889" diameter="1.27" shape="offset" rot="R180"/>
@@ -144,21 +151,20 @@
 <pad name="8" x="2.54" y="-5.08" drill="0.889" diameter="1.27" shape="offset"/>
 <pad name="7" x="2.54" y="-7.62" drill="0.889" diameter="1.27" shape="offset"/>
 <pad name="6" x="2.54" y="-10.16" drill="0.889" diameter="1.27" shape="offset"/>
-<wire x1="-1.27" y1="1.27" x2="3.81" y2="1.27" width="0.5" layer="21"/>
-<wire x1="3.81" y1="1.27" x2="3.81" y2="-11.43" width="0.5" layer="21"/>
-<wire x1="3.81" y1="-11.43" x2="-1.27" y2="-11.43" width="0.5" layer="21"/>
-<wire x1="-1.27" y1="-11.43" x2="-1.27" y2="1.27" width="0.5" layer="21"/>
-<text x="-5.08" y="-10.16" size="1.27" layer="48">5</text>
-<text x="-5.08" y="-7.62" size="1.27" layer="48">4</text>
-<text x="-5.08" y="-5.08" size="1.27" layer="48">3</text>
-<text x="-5.08" y="-2.54" size="1.27" layer="48">2</text>
-<text x="-5.08" y="0" size="1.27" layer="48">1</text>
-<text x="6.35" y="0" size="1.27" layer="48">10</text>
-<text x="6.35" y="-2.54" size="1.27" layer="48">9</text>
-<text x="6.35" y="-5.08" size="1.27" layer="48">8</text>
-<text x="6.35" y="-7.62" size="1.27" layer="48">7</text>
-<text x="6.35" y="-10.16" size="1.27" layer="48">6</text>
-<text x="-1.27" y="2.54" size="1.27" layer="48">&gt;NAME</text>
+<wire x1="-1.27" y1="1.27" x2="3.81" y2="1.27" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-11.43" x2="-1.27" y2="-11.43" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="0.873125" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-0.873125" x2="-1.27" y2="-1.666875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-3.413125" x2="-1.27" y2="-4.206875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-5.953125" x2="-1.27" y2="-6.746875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-8.493125" x2="-1.27" y2="-9.286875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-11.43" x2="-1.27" y2="-11.033125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-11.43" x2="3.81" y2="-11.033125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-9.286875" x2="3.81" y2="-8.493125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-6.746875" x2="3.81" y2="-5.953125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-4.206875" x2="3.81" y2="-3.413125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-1.666875" x2="3.81" y2="-0.873125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="1.27" x2="3.81" y2="0.873125" width="0.127" layer="21"/>
 </package>
 <package name="LISTA_2X10">
 <pad name="20" x="2.54" y="0" drill="0.889" diameter="1.27" shape="offset"/>
@@ -181,31 +187,50 @@
 <pad name="8" x="0" y="-17.78" drill="0.889" diameter="1.27" shape="offset" rot="R180"/>
 <pad name="9" x="0" y="-20.32" drill="0.889" diameter="1.27" shape="offset" rot="R180"/>
 <pad name="10" x="0" y="-22.86" drill="0.889" diameter="1.27" shape="offset" rot="R180"/>
-<wire x1="-1.27" y1="-24.13" x2="3.81" y2="-24.13" width="0.5" layer="21"/>
-<wire x1="3.81" y1="-24.13" x2="3.81" y2="1.27" width="0.5" layer="21"/>
-<wire x1="-1.27" y1="-24.13" x2="-1.27" y2="1.27" width="0.5" layer="21"/>
-<wire x1="-1.27" y1="1.27" x2="3.81" y2="1.27" width="0.5" layer="21"/>
-<text x="-1.08" y="3" size="1.27" layer="48">&gt;NAME</text>
-<text x="-5.08" y="-22.86" size="1.27" layer="48" distance="100">10</text>
-<text x="-5.08" y="-20.32" size="1.27" layer="48">9</text>
-<text x="-5.08" y="-17.78" size="1.27" layer="48">8</text>
-<text x="-5.08" y="-15.24" size="1.27" layer="48">7</text>
-<text x="-5.08" y="-12.7" size="1.27" layer="48">6</text>
-<text x="-5.08" y="-10.16" size="1.27" layer="48">5</text>
-<text x="-5.08" y="-7.62" size="1.27" layer="48">4</text>
-<text x="-5.08" y="-5.08" size="1.27" layer="48">3</text>
-<text x="-5.08" y="-2.54" size="1.27" layer="48">2</text>
-<text x="-5.08" y="0" size="1.27" layer="48">1</text>
-<text x="7.62" y="0" size="1.27" layer="48" align="bottom-right">20</text>
-<text x="7.62" y="-2.54" size="1.27" layer="48" align="bottom-right">19</text>
-<text x="7.62" y="-5.08" size="1.27" layer="48" align="bottom-right">18</text>
-<text x="7.62" y="-7.62" size="1.27" layer="48" align="bottom-right">17</text>
-<text x="7.62" y="-10.16" size="1.27" layer="48" align="bottom-right">16</text>
-<text x="7.62" y="-12.7" size="1.27" layer="48" align="bottom-right">15</text>
-<text x="7.62" y="-15.24" size="1.27" layer="48" align="bottom-right">14</text>
-<text x="7.62" y="-17.78" size="1.27" layer="48" align="bottom-right">13</text>
-<text x="7.62" y="-20.32" size="1.27" layer="48" align="bottom-right">12</text>
-<text x="7.62" y="-22.86" size="1.27" layer="48" align="bottom-right">11</text>
+<wire x1="-1.27" y1="-24.13" x2="3.81" y2="-24.13" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="1.27" x2="3.81" y2="1.27" width="0.127" layer="21"/>
+<text x="0" y="0" size="0.762" layer="48" rot="R30" align="center-right">1</text>
+<text x="0" y="-2.54" size="0.762" layer="48" rot="R30" align="center-right">2</text>
+<text x="0" y="-5.08" size="0.762" layer="48" rot="R30" align="center-right">3</text>
+<text x="0" y="-7.62" size="0.762" layer="48" rot="R30" align="center-right">4</text>
+<text x="0" y="-10.16" size="0.762" layer="48" rot="R30" align="center-right">5</text>
+<text x="0" y="-12.7" size="0.762" layer="48" rot="R30" align="center-right">6</text>
+<text x="0" y="-15.24" size="0.762" layer="48" rot="R30" align="center-right">7</text>
+<text x="0" y="-17.78" size="0.762" layer="48" rot="R30" align="center-right">8</text>
+<text x="0" y="-20.32" size="0.762" layer="48" rot="R30" align="center-right">9</text>
+<text x="0" y="-22.86" size="0.762" layer="48" rot="R30" align="center-right">10</text>
+<text x="2.54" y="-22.86" size="0.762" layer="48" rot="R30" align="center-left">11</text>
+<text x="2.54" y="-20.32" size="0.762" layer="48" rot="R30" align="center-left">12</text>
+<text x="2.54" y="-17.78" size="0.762" layer="48" rot="R30" align="center-left">13</text>
+<text x="2.54" y="-15.24" size="0.762" layer="48" rot="R30" align="center-left">14</text>
+<text x="2.54" y="-12.7" size="0.762" layer="48" rot="R30" align="center-left">15</text>
+<text x="2.54" y="-10.16" size="0.762" layer="48" rot="R30" align="center-left">16</text>
+<text x="2.54" y="-7.62" size="0.762" layer="48" rot="R30" align="center-left">17</text>
+<text x="2.54" y="-5.08" size="0.762" layer="48" rot="R30" align="center-left">18</text>
+<text x="2.54" y="-2.54" size="0.762" layer="48" rot="R30" align="center-left">19</text>
+<text x="2.54" y="0" size="0.762" layer="48" rot="R30" align="center-left">20</text>
+<wire x1="-1.27" y1="1.27" x2="-1.27" y2="0.873125" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-0.873125" x2="-1.27" y2="-1.666875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-3.413125" x2="-1.27" y2="-4.206875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-5.953125" x2="-1.27" y2="-6.746875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-8.493125" x2="-1.27" y2="-9.286875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-11.033125" x2="-1.27" y2="-11.826875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-13.573125" x2="-1.27" y2="-14.366875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-16.113125" x2="-1.27" y2="-16.906875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-18.653125" x2="-1.27" y2="-19.446875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-21.193125" x2="-1.27" y2="-21.986875" width="0.127" layer="21"/>
+<wire x1="-1.27" y1="-23.733125" x2="-1.27" y2="-24.13" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-24.13" x2="3.81" y2="-23.733125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-21.986875" x2="3.81" y2="-21.193125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-19.446875" x2="3.81" y2="-18.653125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-16.906875" x2="3.81" y2="-16.113125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-14.366875" x2="3.81" y2="-13.573125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-11.826875" x2="3.81" y2="-11.033125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-9.286875" x2="3.81" y2="-8.493125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-6.746875" x2="3.81" y2="-5.953125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-4.206875" x2="3.81" y2="-3.413125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="-1.666875" x2="3.81" y2="-0.873125" width="0.127" layer="21"/>
+<wire x1="3.81" y1="0.873125" x2="3.81" y2="1.27" width="0.127" layer="21"/>
 </package>
 <package name="REZISTOR">
 <wire x1="-2.54" y1="1.27" x2="-2.54" y2="0" width="0.127" layer="21"/>
@@ -214,11 +239,10 @@
 <wire x1="2.54" y1="-1.27" x2="2.54" y2="0" width="0.127" layer="21"/>
 <wire x1="2.54" y1="0" x2="2.54" y2="1.27" width="0.127" layer="21"/>
 <wire x1="2.54" y1="1.27" x2="-2.54" y2="1.27" width="0.127" layer="21"/>
-<wire x1="-2.54" y1="0" x2="-5.08" y2="0" width="0.127" layer="48"/>
-<wire x1="2.54" y1="0" x2="5.08" y2="0" width="0.127" layer="48"/>
+<wire x1="-2.54" y1="0" x2="-4.18" y2="0" width="0.127" layer="21"/>
+<wire x1="2.54" y1="0" x2="4.18" y2="0" width="0.127" layer="21"/>
 <pad name="P$1" x="-5.08" y="0" drill="0.762" diameter="1.27" shape="offset" rot="R180"/>
 <pad name="P$2" x="5.08" y="0" drill="0.762" diameter="1.27" shape="offset"/>
-<text x="-3.81" y="2.54" size="1.27" layer="21">&gt;Value</text>
 </package>
 <package name="KONDENZATOR_SIROKY">
 <pad name="P$2" x="-5.08" y="0" drill="0.8" shape="offset" rot="R180"/>
@@ -229,8 +253,8 @@
 <package name="KONDENZATOR">
 <pad name="P$1" x="-2.54" y="0" drill="0.762" diameter="1.27" shape="offset" rot="R180"/>
 <pad name="P$2" x="2.54" y="0" drill="0.762" diameter="1.27" shape="offset"/>
-<wire x1="2.64" y1="0" x2="-2.64" y2="0" width="0.127" layer="21" curve="-90"/>
-<wire x1="-2.64" y1="0" x2="2.64" y2="0" width="0.127" layer="21" curve="-90"/>
+<wire x1="1.6875" y1="0" x2="-1.6875" y2="0" width="0.127" layer="21" curve="-90"/>
+<wire x1="-1.6875" y1="0" x2="1.6875" y2="0" width="0.127" layer="21" curve="-90"/>
 <text x="-3.81" y="1.27" size="1.27" layer="21">&gt;Value</text>
 </package>
 </packages>
@@ -332,8 +356,8 @@
 <pin name="5" x="-5.08" y="-12.7" visible="pin" length="middle"/>
 <pin name="4" x="-5.08" y="-10.16" visible="pin" length="middle"/>
 <pin name="3" x="-5.08" y="-7.62" visible="pin" length="middle"/>
-<pin name="2" x="-5.08" y="-5.08" visible="pin" length="middle"/>
-<pin name="1" x="-5.08" y="-2.54" visible="pin" length="middle"/>
+<pin name="2" x="-5.08" y="-5.08" length="middle"/>
+<pin name="1" x="-5.08" y="-2.54" length="middle"/>
 <text x="3.27" y="1" size="1.27" layer="94">&gt;NAME</text>
 </symbol>
 <symbol name="REZISTOR">
@@ -572,46 +596,46 @@
 </class>
 </classes>
 <parts>
-<part name="U$1" library="RadioStack_v2" deviceset="PEC11R" device=""/>
-<part name="U$2" library="RadioStack_v2" deviceset="PEC11R" device=""/>
-<part name="U$3" library="RadioStack_v2" deviceset="PEC11R" device=""/>
-<part name="U$4" library="RadioStack_v2" deviceset="PEC11R" device=""/>
-<part name="U$5" library="RadioStack_v2" deviceset="SA3611EWA" device=""/>
-<part name="U$6" library="RadioStack_v2" deviceset="SA3611EWA" device=""/>
-<part name="U$7" library="RadioStack_v2" deviceset="SA3611EWA" device=""/>
-<part name="U$8" library="RadioStack_v2" deviceset="SA3611EWA" device=""/>
-<part name="U$9" library="RadioStack_v2" deviceset="P1-0S" device=""/>
-<part name="U$10" library="RadioStack_v2" deviceset="LED_5MM" device=""/>
-<part name="U$17" library="RadioStack_v2" deviceset="LISTA_2X5" device=""/>
-<part name="U$18" library="RadioStack_v2" deviceset="LISTA_2X10" device=""/>
-<part name="U$11" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$12" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$13" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$14" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$15" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$16" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$19" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$20" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$21" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$22" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$23" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$24" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$25" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$26" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$27" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$28" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$30" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$31" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
-<part name="U$29" library="RadioStack_v2" deviceset="KONDENZATOR_SIROKY" device=""/>
-<part name="U$32" library="RadioStack_v2" deviceset="KONDENZATOR_SIROKY" device=""/>
-<part name="U$33" library="RadioStack_v2" deviceset="KONDENZATOR_SIROKY" device=""/>
-<part name="U$34" library="RadioStack_v2" deviceset="KONDENZATOR" device=""/>
-<part name="U$35" library="RadioStack_v2" deviceset="KONDENZATOR_SIROKY" device=""/>
-<part name="U$36" library="RadioStack_v2" deviceset="KONDENZATOR_SIROKY" device=""/>
-<part name="U$37" library="RadioStack_v2" deviceset="KONDENZATOR_SIROKY" device=""/>
-<part name="U$38" library="RadioStack_v2" deviceset="KONDENZATOR" device=""/>
-<part name="U$39" library="RadioStack_v2" deviceset="KONDENZATOR" device=""/>
-<part name="U$40" library="RadioStack_v2" deviceset="REZISTOR" device="" value=""/>
+<part name="U$1" library="library" deviceset="PEC11R" device=""/>
+<part name="U$2" library="library" deviceset="PEC11R" device=""/>
+<part name="U$3" library="library" deviceset="PEC11R" device=""/>
+<part name="U$4" library="library" deviceset="PEC11R" device=""/>
+<part name="U$5" library="library" deviceset="SA3611EWA" device=""/>
+<part name="U$6" library="library" deviceset="SA3611EWA" device=""/>
+<part name="U$7" library="library" deviceset="SA3611EWA" device=""/>
+<part name="U$8" library="library" deviceset="SA3611EWA" device=""/>
+<part name="U$9" library="library" deviceset="P1-0S" device=""/>
+<part name="U$10" library="library" deviceset="LED_5MM" device=""/>
+<part name="U$17" library="library" deviceset="LISTA_2X5" device=""/>
+<part name="U$18" library="library" deviceset="LISTA_2X10" device=""/>
+<part name="U$11" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$12" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$13" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$14" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$15" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$16" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$19" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$20" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$21" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$22" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$23" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$24" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$25" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$26" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$27" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$28" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$30" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$31" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
+<part name="U$29" library="library" deviceset="KONDENZATOR_SIROKY" device=""/>
+<part name="U$32" library="library" deviceset="KONDENZATOR_SIROKY" device=""/>
+<part name="U$33" library="library" deviceset="KONDENZATOR_SIROKY" device=""/>
+<part name="U$34" library="library" deviceset="KONDENZATOR" device=""/>
+<part name="U$35" library="library" deviceset="KONDENZATOR_SIROKY" device=""/>
+<part name="U$36" library="library" deviceset="KONDENZATOR_SIROKY" device=""/>
+<part name="U$37" library="library" deviceset="KONDENZATOR_SIROKY" device=""/>
+<part name="U$38" library="library" deviceset="KONDENZATOR" device=""/>
+<part name="U$39" library="library" deviceset="KONDENZATOR" device=""/>
+<part name="U$40" library="library" deviceset="REZISTOR" device="" value="REZISTOR"/>
 </parts>
 <sheets>
 <sheet>
