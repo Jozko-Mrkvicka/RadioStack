@@ -1,1 +1,3 @@
-Software_AVR/**/bin/*
+/Software_AVR/bin/*
+/Software_AVR/common/bin/*
+/Software_AVR/modules/bin/*
