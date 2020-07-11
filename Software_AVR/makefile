@@ -1,6 +1,7 @@
 ####################################################################
 # RadioStack v2.0 - makefile - main - 4.4.2015
 ####################################################################
+SHELL = cmd
 
 CC = avr-gcc
 
@@ -42,9 +43,12 @@ link = $(CC) $(param_link) bin/$< $(common_obj) $(modules_obj) -o bin/$@
 hexcode = avr-objcopy -j .text -j .data -O ihex bin/$< bin/$@
 
 load: radiostack.hex
+	@echo \n
+	@echo "###########################################################"
+	@echo "# RADIOSTACK -> FLASHING RADIOSTACK.HEX ...                "
+	@echo "###########################################################"
 	avrdude -p m8 -c AVRispmkII -P usb -y \
 	-U flash:w:bin/$<:i
-	
 	# -U lfuse:w:0xff:m \
 	# -U hfuse:w:0xd9:m \
 
