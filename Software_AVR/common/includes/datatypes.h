@@ -10,9 +10,6 @@
 #include <avr/io.h>
 #include <util/twi.h>
   
-#define TRUE 1
-#define FALSE 0
-
 typedef enum
 {
     HIGH,

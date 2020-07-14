@@ -3,12 +3,18 @@
 //
 //	This module ...
 /////////////////////////////////////////////////////////////////////
-
 #include "navcom.h"
+
+/* MCP23016 - command byte to register relationship. */
+#define ACCESS_TO_GP0      0x00u
+#define ACCESS_TO_IODIR0   0x06u
+#define ACCESS_TO_INTCAP0  0x08u
+#define ACCESS_TO_IOCON0   0x0Au
+
 
 void navcomm_output(int num_1, int num_2, int num_3, int num_4, unsigned char address)
 {
-	char message[DIPLAY_DRIVER_MESSAGE_SIZE];
+	uint8_t message[DIPLAY_DRIVER_MESSAGE_SIZE];
 
 	char str_1[DIPLAY_DRIVER_STRING_SIZE + 1];
 	char str_2[DIPLAY_DRIVER_STRING_SIZE + 1];
@@ -27,38 +33,43 @@ void navcomm_output(int num_1, int num_2, int num_3, int num_4, unsigned char ad
 
 	display_driver_convert_data(str_1, str_2, str_3, str_4, data_1, data_2, data_3);
 
-	display_driver_create_message(message, data_1, 1);
+	display_driver_create_message((char *) message, data_1, 1);
 	twi_transmit_data(message, DIPLAY_DRIVER_MESSAGE_SIZE, address);
 
-	display_driver_create_message(message, data_2, 2);
+	display_driver_create_message((char *) message, data_2, 2);
 	twi_transmit_data(message, DIPLAY_DRIVER_MESSAGE_SIZE, address);
 
-	display_driver_create_message(message, data_3, 3);
+	display_driver_create_message((char *) message, data_3, 3);
 	twi_transmit_data(message, DIPLAY_DRIVER_MESSAGE_SIZE, address);
 }
 
 
-void navcomm_input_init(unsigned char address)
+/* Configure all of the pins in MCP23016 I/O expander as inputs with high sampling frequency. */
+void mcp23016_init(uint8_t address)
 {
-	char message[3];
+	uint8_t command[3];
 
-	message[0] = 0x0A; // select access to IOCON0 register (MCP23016)
-	message[1] = 0x01; // send data to IOCON0 register - set IARES bit to 1 (higher sampling freq.)
-	message[2] = 0x01; // send data to IOCON1 register - set IARES bit to 1 (higher sampling freq.)
-	twi_transmit_data(message, 3, address);
+	/* Set sampling frequency. */
+	command[0] = ACCESS_TO_IOCON0;
+	command[1] = 0x01u; /* IOCON0 register -> set IARES bit to 1 (higher sampling freq.). */
+	command[2] = 0x01u; /* IOCON1 register -> set IARES bit to 1 (higher sampling freq.). */
+	twi_transmit_data(command, 3u, address | TW_WRITE);
+
+	/* Set pin direction. */
+	command[0] = ACCESS_TO_IODIR0;
+	command[1] = 0xFFu; /* IODIR0 register -> set all pins as inputs. */
+	command[2] = 0xFFu; /* IODIR1 register -> set all pins as inputs. */
+	twi_transmit_data(command, 3u, address | TW_WRITE);
 }
 
 
 void navcomm_input(unsigned char address, char *encoder, char *button)
 {
-	#define ACCESS_TO_GP0 0x00
-	#define ACCESS_TO_INTCAP0 0x08
-
 	unsigned char gp_reg[2];
 	unsigned char intcap_reg[2];
 
-	twi_receive_data(gp_reg, address, ACCESS_TO_GP0);
-	twi_receive_data(intcap_reg, address, ACCESS_TO_INTCAP0);
+	mcp23016_read_input(gp_reg,     address, ACCESS_TO_GP0);
+	mcp23016_read_input(intcap_reg, address, ACCESS_TO_INTCAP0);
 
 	navcomm_input_convert_encoder_data(intcap_reg[1], gp_reg[0], encoder);
 	navcomm_input_convert_button_data(gp_reg[0], button);

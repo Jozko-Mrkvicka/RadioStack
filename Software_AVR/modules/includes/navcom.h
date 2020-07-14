@@ -10,7 +10,7 @@
 void navcomm_output(int num_1, int num_2, int num_3, int num_4, unsigned char address);
 
 // This function ...
-void navcomm_input_init(unsigned char address);
+void mcp23016_init(uint8_t address);
 
 // This function ...
 void navcomm_input(unsigned char address, char *encoder, char *button);

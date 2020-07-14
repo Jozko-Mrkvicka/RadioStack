@@ -47,10 +47,15 @@ load: radiostack.hex
 	@echo "###########################################################"
 	@echo "# RADIOSTACK -> FLASHING RADIOSTACK.HEX ...                "
 	@echo "###########################################################"
-	avrdude -p m8 -c AVRispmkII -P usb -y \
-	-U flash:w:bin/$<:i
-	# -U lfuse:w:0xff:m \
-	# -U hfuse:w:0xd9:m \
+	avrdude                 \
+		-p m8               \
+		-c AVRispmkII       \
+		-P usb              \
+		-y                  \
+# 		-B 3                \
+		-U flash:w:bin/$<:i
+#		-U hfuse:w:0xd9:m   \
+#		-U lfuse:w:0xff:m
 
 all: radiostack.hex
 	@echo \n
