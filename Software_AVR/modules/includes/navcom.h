@@ -6,21 +6,25 @@
 #include "../../common/includes/icm7228_driver.h"
 #include "../../common/includes/two_wire_interface.h"
 
-// This function ...
-void navcomm_output(int num_1, int num_2, int num_3, int num_4, unsigned char address);
 
-// This function ...
+/* MCP23016 - command byte to register relationship. */
+#define ACCESS_TO_GP0      0x00u
+#define ACCESS_TO_IODIR0   0x06u
+#define ACCESS_TO_INTCAP0  0x08u
+#define ACCESS_TO_IOCON0   0x0Au
+
+/* Number of rotary encoders in NavCom module. */
+#define ENC_NUM 4u
+
+#define DRIVER_1_WRITE_HIGH 0x20u
+#define DRIVER_2_WRITE_HIGH 0x40u
+#define DRIVER_3_WRITE_HIGH 0x80u
+
+
+void navcomm_output(int num_1, int num_2, int num_3, int num_4, uint8_t address);
+
 void mcp23016_init(uint8_t address);
 
-// This function ...
-void navcomm_input(unsigned char address, char *encoder, char *button);
-
-// This function inputs two bytes of read data from I2C expander and converts
-// it to an array of four integers. Each integer has one of three values 
-// to indicate encoder motion (-1, 0, 1 == decr, no change, incr). 
-void navcomm_input_convert_encoder_data(unsigned char intcap_reg, unsigned char gp_reg, char *encoder);
-
-// This function ...
-void navcomm_input_convert_button_data(unsigned char gp_reg, char *button);
+void navcomm_input(uint8_t address, int8_t *encoder, uint8_t *button);
 
 #endif

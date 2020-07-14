@@ -9,7 +9,7 @@ int main(void)
 	// Debug
 	uint8_t heart_beat = 0u;
 
-	int comm1_act =  39;
+	int comm1_act =  43;
 	int comm1_stby = 2;
 	int nav1_act =   3;
 	int nav1_stby =  4;
@@ -19,11 +19,11 @@ int main(void)
 	int nav2_act =   7;
 	int nav2_stby =  8;
 
-	char button2[BUTTON_NUM];
-	char button1[BUTTON_NUM];
+	uint8_t button2[BUTTON_NUM];
+	uint8_t button1[BUTTON_NUM];
 
-	char encoder1[4];
-	char encoder2[4];
+	int8_t encoder1[4];
+	int8_t encoder2[4];
 
 	bool output_changed = true;
 
@@ -33,7 +33,7 @@ int main(void)
 
 	// unsigned char znak = 0x33;
 
-	while (1)
+	while (true)
 	{
 		// Debug
 		heart_beat++;

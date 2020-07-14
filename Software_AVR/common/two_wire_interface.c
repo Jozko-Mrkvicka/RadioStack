@@ -5,15 +5,17 @@
 *************************************************************/
 #include "two_wire_interface.h"
 
+static bool twi_is_data_ack_received(void);
+
 
 /* Set frequency of TWI SCL line. */
 void twi_set_freq(void)
 {
 	/* Set bit rate register. */
-  	TWBR = 0x08;
+  	TWBR = 0x08u;
 
   	/* Set prescaler bits of status register. */
-	TWSR = 0xFC;
+	TWSR = 0xFCu;
 }
 
 
@@ -21,10 +23,10 @@ void twi_set_freq(void)
 uint8_t twi_transmit_start(void)
 {
 	/* Generate start event. */
-    TWCR = (1 << TWINT) | (0 << TWEA) | (1 << TWSTA) | (0 << TWSTO) | (1 << TWEN); 
+    TWCR = (1u << TWINT) | (0u << TWEA) | (1u << TWSTA) | (0u << TWSTO) | (1u << TWEN); 
 
     /* Wait until transmitted. */
-	while (false == (TWCR & (1 << TWINT)))
+	while (false == (TWCR & (1u << TWINT)))
 		;
 
 	return TW_STATUS;
@@ -35,7 +37,7 @@ uint8_t twi_transmit_start(void)
 uint8_t twi_transmit_stop(void)
 {
 	/* Generate stop event. */
-    TWCR = (1 << TWINT) | (0 << TWEA) | (0 << TWSTA) | (1 << TWSTO) | (1 << TWEN);
+    TWCR = (1u << TWINT) | (0u << TWEA) | (0u << TWSTA) | (1u << TWSTO) | (1u << TWEN);
 
 	return TW_STATUS;
 }
@@ -46,10 +48,10 @@ uint8_t twi_transmit_byte(uint8_t byte)
 	TWDR = byte;
 
 	/* Transmit one byte. */
-    TWCR = (1 << TWINT) | (0 << TWEA) | (0 << TWSTA) | (0 << TWSTO) | (1 << TWEN);
+    TWCR = (1u << TWINT) | (0u << TWEA) | (0u << TWSTA) | (0u << TWSTO) | (1u << TWEN);
 
     /* Wait until transmitted. */
-	while (false == (TWCR & (1 << TWINT)))
+	while (false == (TWCR & (1u << TWINT)))
 		;
 
 	return TW_STATUS;
@@ -61,7 +63,7 @@ uint8_t twi_receive_byte(uint8_t *byte, uint8_t respond)
     volatile uint8_t timeout = 0u;
 
 	/* Data byte will be received and ACK/NACK will be returned. */
-	TWCR = (1 << TWINT) | (respond << TWEA) | (0 << TWSTA) | (0 << TWSTO) | (1 << TWEN);
+	TWCR = (1u << TWINT) | (respond << TWEA) | (0u << TWSTA) | (0u << TWSTO) | (1u << TWEN);
 
     /* Wait until transmitted. If some module is not connected to mainboard 
        then this loop would last forever. To prevent this there is a timeout. */
@@ -74,7 +76,7 @@ uint8_t twi_receive_byte(uint8_t *byte, uint8_t respond)
 }
 
 
-bool twi_is_data_ack_received(void)
+static bool twi_is_data_ack_received(void)
 {
 	if (TW_STATUS == TW_MT_DATA_ACK)
 		return true;
@@ -85,14 +87,14 @@ bool twi_is_data_ack_received(void)
 
 uint8_t twi_transmit_data(uint8_t *data, uint8_t size, uint8_t slave_addr)
 {
-	uint8_t already_transmitted = 0;
+	uint8_t already_transmitted = 0u;
 	uint8_t i;
 
 	twi_transmit_start();
 
 	twi_transmit_byte(slave_addr | TW_WRITE);
 
-	for (i = 0; i < size; i++)
+	for (i = 0u; i < size; i++)
 	{
 		twi_transmit_byte(data[i]);
 		if (true == twi_is_data_ack_received())
@@ -122,8 +124,8 @@ void mcp23016_read_input(uint8_t *data, uint8_t slave_addr, uint8_t command)
 	twi_transmit_byte(slave_addr | TW_READ);
 
 	/* Read one register pair from MCP23016. */
-	twi_receive_byte(&data[0], ACK);
-	twi_receive_byte(&data[1], NACK);
+	twi_receive_byte(&data[0u], ACK);
+	twi_receive_byte(&data[1u], NACK);
 
 	twi_transmit_stop();
 }
