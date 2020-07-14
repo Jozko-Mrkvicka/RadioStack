@@ -33,9 +33,7 @@
 #define CHAR_P    	14u
 #define CHAR_BLANK  15u
 
-
 void icm7228_create_message(uint8_t* message, uint8_t* data, uint8_t disp_num);
-
 void icm7228_convert_char_to_num(uint8_t* str);
 
 #endif

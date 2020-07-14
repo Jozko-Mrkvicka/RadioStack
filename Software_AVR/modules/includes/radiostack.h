@@ -1,7 +1,6 @@
-/////////////////////////////////////////////////////////////////////
-//  RadioStack v2.0/radiostack - 14.10.2017
-/////////////////////////////////////////////////////////////////////
-
+/*************************************************************
+* RadioStack v2.0/mcp23016
+*************************************************************/
 #ifndef __RADIOSTACK__
 #define __RADIOSTACK__
 
@@ -13,10 +12,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "two_wire_interface.h"
 #include "navcom.h"
+#include "two_wire_interface.h"
 #include "usart.h"
-
+#include "mcp23016.h"
 
 //                             7 6 5 4 3  2  1  0 
 // TWI address of MCP23016 is "0 1 0 0 A2 A1 A0 R/~W"
@@ -28,14 +27,5 @@
 
 #define TWI_ADDRESS_NAV2_OUTPUT 0x74 // PCF8574A
 #define TWI_ADDRESS_NAV2_INPUT  0x44 // MCP23016
-
-// This function ...
-void init(void);
-
-// This function ...
-void rotary_encoders_init(void);
-
-// This function ...
-void mcp23016_latch_reset(void);
 
 #endif

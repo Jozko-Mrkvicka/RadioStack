@@ -1,6 +1,12 @@
+/*************************************************************
+* RadioStack v2.0
+*************************************************************/
 #include "radiostack.h"
 
 #define BUTTON_NUM 4
+
+static void init(void);
+static void rotary_encoders_init(void);
 
 bool input_changed = false;
 
@@ -9,7 +15,7 @@ int main(void)
 	// Debug
 	uint8_t heart_beat = 0u;
 
-	int comm1_act =  43;
+	int comm1_act =  44;
 	int comm1_stby = 2;
 	int nav1_act =   3;
 	int nav1_stby =  4;
@@ -120,7 +126,7 @@ ISR (INT0_vect)
 }
 
 
-void init(void)
+static void init(void)
 {
 	// USART_init();
 	twi_set_freq();
@@ -130,7 +136,7 @@ void init(void)
 }
 
 
-void rotary_encoders_init(void)
+static void rotary_encoders_init(void)
 {
 	/* Wait for MCP23016 to inicialize. */
 	_delay_ms(200);
@@ -154,15 +160,5 @@ void rotary_encoders_init(void)
 	   1 1 - The rising edge of INT0 generates an interrupt request. */
 	MCUCR |=  (1 << ISC01);
 	MCUCR &= ~(1 << ISC00);
-}
-
-
-/* Send pulse to reset latch register in MCP23016. */
-void mcp23016_latch_reset(void)
-{
-	PORTD |= (1 << PD4);
-	_delay_ms(1);
-	PORTD &= ~(1 << PD4);
-	_delay_ms(1);
 }
 

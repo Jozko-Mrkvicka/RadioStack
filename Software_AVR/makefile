@@ -18,6 +18,7 @@ libs =
 obj_dir = modules/bin/
 
 common_obj = common/bin/icm7228.o \
+			common/bin/mcp23016.o \
 			common/bin/two_wire_interface.o \
 			common/bin/usart.o
 

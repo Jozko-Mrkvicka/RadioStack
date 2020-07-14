@@ -4,7 +4,6 @@
 #include "navcom.h"
 
 static void navcomm_input_convert_button_data(uint8_t gp_reg, uint8_t *button);
-
 static void navcomm_input_convert_encoder_data(uint8_t intcap_reg, uint8_t gp_reg, int8_t *encoder);
 
 
@@ -67,25 +66,6 @@ void navcomm_output(int num_1, int num_2, int num_3, int num_4, uint8_t address)
 
 	icm7228_create_message(message, data_3, DRIVER_3_WRITE_HIGH);
 	twi_transmit_data(message, DIPLAY_DRIVER_MESSAGE_SIZE, address);
-}
-
-
-/* Configure all of the pins in MCP23016 I/O expander as inputs with high sampling frequency. */
-void mcp23016_init(uint8_t address)
-{
-	uint8_t command[3u];
-
-	/* Set sampling frequency. */
-	command[0u] = ACCESS_TO_IOCON0;
-	command[1u] = 0x01u; /* IOCON0 register -> set IARES bit to 1 (higher sampling freq.). */
-	command[2u] = 0x01u; /* IOCON1 register -> set IARES bit to 1 (higher sampling freq.). */
-	twi_transmit_data(command, 3u, address | TW_WRITE);
-
-	/* Set pin direction. */
-	command[0u] = ACCESS_TO_IODIR0;
-	command[1u] = 0xFFu; /* IODIR0 register -> set all pins as inputs. */
-	command[2u] = 0xFFu; /* IODIR1 register -> set all pins as inputs. */
-	twi_transmit_data(command, 3u, address | TW_WRITE);
 }
 
 

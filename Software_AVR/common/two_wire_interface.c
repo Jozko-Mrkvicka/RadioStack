@@ -88,13 +88,12 @@ static bool twi_is_data_ack_received(void)
 uint8_t twi_transmit_data(uint8_t *data, uint8_t size, uint8_t slave_addr)
 {
 	uint8_t already_transmitted = 0u;
-	uint8_t i;
 
 	twi_transmit_start();
 
 	twi_transmit_byte(slave_addr | TW_WRITE);
 
-	for (i = 0u; i < size; i++)
+	for (uint8_t i = 0u; i < size; i++)
 	{
 		twi_transmit_byte(data[i]);
 		if (true == twi_is_data_ack_received())
@@ -104,29 +103,5 @@ uint8_t twi_transmit_data(uint8_t *data, uint8_t size, uint8_t slave_addr)
 	twi_transmit_stop();
 
 	return already_transmitted;
-}
-
-
-void mcp23016_read_input(uint8_t *data, uint8_t slave_addr, uint8_t command)
-{
-	twi_transmit_start();
-
-	/* Select slave device (for writing). */
-	twi_transmit_byte(slave_addr | TW_WRITE);
-
-	/* MCP23016 command byte -> select register to read/write. */
-	twi_transmit_byte(command);
-
-	/* Repeated start. */
-	twi_transmit_start();
-
-	/* Select slave device (for reading). */
-	twi_transmit_byte(slave_addr | TW_READ);
-
-	/* Read one register pair from MCP23016. */
-	twi_receive_byte(&data[0u], ACK);
-	twi_receive_byte(&data[1u], NACK);
-
-	twi_transmit_stop();
 }
 
