@@ -5,7 +5,7 @@
 * The input data have format of text strings. The strings are converted 
 * to integer format and the output message is created.
 *************************************************************/
-#include "icm7228_driver.h"
+#include "icm7228.h"
 
 static void icm7228_trunc_data_to_max_value(uint8_t* data);
 

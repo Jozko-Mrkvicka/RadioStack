@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "../../common/includes/icm7228_driver.h"
+#include "../../common/includes/icm7228.h"
 #include "../../common/includes/two_wire_interface.h"
 
 

@@ -17,7 +17,7 @@ libs =
 
 obj_dir = modules/bin/
 
-common_obj = common/bin/icm7228_driver.o \
+common_obj = common/bin/icm7228.o \
 			common/bin/two_wire_interface.o \
 			common/bin/usart.o
 

@@ -13,7 +13,7 @@ compile = $(CC) $(param) $(incl) -c $< -o bin/$@.o
 
 # archive = avr-ar -rcs bin/lib$@.a bin/iopin.o bin/packing.o bin/usart.o
 
-all: icm7228_driver two_wire_interface usart
+all: icm7228 two_wire_interface usart
 
 # common: iopin packing usart
 # 	@echo \n
@@ -22,7 +22,7 @@ all: icm7228_driver two_wire_interface usart
 # 	@echo "-------------------------------------------------------"
 # 	$(archive)
 
-icm7228_driver: icm7228_driver.c
+icm7228: icm7228.c
 	@echo \n
 	@echo "-------------------------------------------------------"
 	@echo "| RADIOSTACK -> COMMON -> COMPILING TO ICM7228_.. .O   "
