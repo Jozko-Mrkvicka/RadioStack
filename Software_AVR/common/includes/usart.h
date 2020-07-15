@@ -1,19 +1,13 @@
-/////////////////////////////////////////////////////////////////////
-//  RadioStack v2.0/usart - 12.11.2017
-/////////////////////////////////////////////////////////////////////
-
 #ifndef __USART__
 #define __USART__
 
 #include <avr/io.h>
+#include <stdbool.h>
 
-// This function ...
-void USART_init();
+#define UBRRH_MASK 0x0Fu
 
-// This function .`..
-void USART_send(/*unsigned*/ char *buffer, int num);
-
-// This function ..`.
-void USART_receive(unsigned char *buffer, int num);
+void usart_init();
+void usart_send(uint8_t *buffer, uint8_t size);
+void usart_receive(uint8_t *buffer, int num);
 
 #endif

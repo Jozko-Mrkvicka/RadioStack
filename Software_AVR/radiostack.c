@@ -37,7 +37,10 @@ int main(void)
 
 	init();
 
-	// unsigned char znak = 0x33;
+	// Debug
+	// uint8_t znak = 'A';
+	uint8_t text[] = "Set this bit to zero when using synchronous operation.";
+	usart_init();
 
 	while (true)
 	{
@@ -45,7 +48,8 @@ int main(void)
 		heart_beat++;
 		navcomm_output(comm1_act, comm1_stby, nav1_act, heart_beat, TWI_ADDRESS_NAV1_OUTPUT);
 
-		// USART_send(&znak, 1);
+		// usart_send(&znak, 1);
+		usart_send(text, 54);
 		// _delay_ms(10);
 
 		// prichadzaju data
@@ -128,7 +132,7 @@ ISR (INT0_vect)
 
 static void init(void)
 {
-	// USART_init();
+	usart_init();
 	twi_set_freq();
 	rotary_encoders_init();
 	mcp23016_init(TWI_ADDRESS_NAV1_INPUT);
