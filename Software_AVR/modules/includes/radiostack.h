@@ -17,7 +17,31 @@
 #include "usart.h"
 #include "mcp23016.h"
 
-#define BUTTON_NUM  4u
+#define NAVCOMM_BUTTON_NUM   4u
+#define NAVCOMM_ENCODER_NUM  4u
+
+#define BUTTON_PRESSED   1u
+#define BUTTON_RELEASED  0u
+
+/* NavComm 1 input definition. */
+#define NAVCOMM1_BUT_TEST        0u
+#define NAVCOMM1_BUT_COMM_SWAP   1u
+#define NAVCOMM1_BUT_IDENT       2u
+#define NAVCOMM1_BUT_NAV_SWAP    3u
+#define NAVCOMM1_ENC_COMM_INTGR  4u 
+#define NAVCOMM1_ENC_COMM_FRACT  5u
+#define NAVCOMM1_ENC_NAV_INTGR   6u
+#define NAVCOMM1_ENC_NAV_FRACT   7u
+
+/* NavComm 2 input definition. */
+#define NAVCOMM2_BUT_TEST        8u
+#define NAVCOMM2_BUT_COMM_SWAP   9u
+#define NAVCOMM2_BUT_IDENT       10u
+#define NAVCOMM2_BUT_NAV_SWAP    11u
+#define NAVCOMM2_ENC_COMM_INTGR  12u 
+#define NAVCOMM2_ENC_COMM_FRACT  13u
+#define NAVCOMM2_ENC_NAV_INTGR   14u
+#define NAVCOMM2_ENC_NAV_FRACT   15u
 
 #define DISP_COMM1_ACT   0u
 #define DISP_COMM1_STBY  1u

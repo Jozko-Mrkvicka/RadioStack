@@ -4,7 +4,7 @@
 #include "navcom.h"
 
 static void navcomm_input_convert_button_data(uint8_t gp_reg, uint8_t *button);
-static void navcomm_input_convert_encoder_data(uint8_t intcap_reg, uint8_t gp_reg, int8_t *encoder);
+static void navcomm_input_convert_encoder_data(uint8_t intcap_reg, uint8_t gp_reg, uint8_t *encoder);
 
 
 void navcomm_output(uint8_t* str_1, uint8_t* str_2, uint8_t* str_3, uint8_t* str_4, uint8_t address)
@@ -63,7 +63,7 @@ void navcomm_output(uint8_t* str_1, uint8_t* str_2, uint8_t* str_3, uint8_t* str
 }
 
 
-void navcomm_input(uint8_t address, int8_t* encoder, uint8_t* button)
+void navcomm_input(uint8_t address, uint8_t* encoder, uint8_t* button)
 {
 	uint8_t gp_reg[2u];
 	uint8_t intcap_reg[2u];
@@ -78,8 +78,8 @@ void navcomm_input(uint8_t address, int8_t* encoder, uint8_t* button)
 
 /* This function inputs two bytes of read data from I2C expander and converts
    it to an array of four integers. Each integer has one of three values 
-   to indicate encoder motion (-1 == decr, 0 == no change, 1 == incr). */
-static void navcomm_input_convert_encoder_data(uint8_t intcap_reg, uint8_t gp_reg, int8_t* encoder)
+   to indicate encoder motion (0 == no change, 1 == turn left, 2 == turn right). */
+static void navcomm_input_convert_encoder_data(uint8_t intcap_reg, uint8_t gp_reg, uint8_t* encoder)
 {
 	uint8_t clk[ENC_NUM];
 	uint8_t updn[ENC_NUM];
@@ -100,9 +100,9 @@ static void navcomm_input_convert_encoder_data(uint8_t intcap_reg, uint8_t gp_re
 		if (0u == clk[i])
 		{
 			if (updn[i])
-				encoder[i] = 1;
+				encoder[i] = ENC_ROT_LEFT;
 			else
-				encoder[i] = -1;
+				encoder[i] = ENC_ROT_RIGHT;
 		}
 	}
 }

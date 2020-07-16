@@ -13,31 +13,32 @@ int main(void)
 {
 	bool output_changed = true;
 
+	/* NavComm 1 output variables. */
 	uint8_t comm1_act[NAVCOMM_STRING_LEN]  = "00000";
 	uint8_t comm1_stby[NAVCOMM_STRING_LEN] = "-----";
 	uint8_t nav1_act[NAVCOMM_STRING_LEN]   = " HELP";
 	uint8_t nav1_stby[NAVCOMM_STRING_LEN]  = "99999";
 
+	/* NavComm 1 input variables. */
+	uint8_t navcomm1_button[NAVCOMM_BUTTON_NUM]   = {0u, 0u, 0u, 0u};
+	uint8_t navcomm1_encoder[NAVCOMM_ENCODER_NUM] = {0u, 0u, 0u, 0u};
+
+
+	/* NavComm 2 output variables. */
 	uint8_t comm2_act[NAVCOMM_STRING_LEN]  = "00000";
 	uint8_t comm2_stby[NAVCOMM_STRING_LEN] = "00000";
 	uint8_t nav2_act[NAVCOMM_STRING_LEN]   = "00000";
 	uint8_t nav2_stby[NAVCOMM_STRING_LEN]  = "00000";
 
-	uint8_t button1[BUTTON_NUM];
-	// uint8_t button2[BUTTON_NUM];
-
-	int8_t encoder1[4];
-	// int8_t encoder2[4];
+	/* NavComm 2 input variables. */
+	uint8_t navcomm2_button[NAVCOMM_BUTTON_NUM]   = {0u, 0u, 0u, 0u};
+	uint8_t navcomm2_encoder[NAVCOMM_ENCODER_NUM] = {0u, 0u, 0u, 0u};
 
 	init();
 
-	// Debug
-	// uint8_t text[] = "Set this bit to zero when using synchronous operation.";
 
 	while (true)
 	{
-		// usart_send(text, 54);
-
 		/* Data incoming ... */
 		if (0x80 == (UCSRA & (1u << RXC)))
 		{
@@ -89,43 +90,76 @@ int main(void)
 			output_changed = true;
 		}
 
+
 		if (true == output_changed)
 		{
 			/* Write outputs to NavCom modules. */
 			navcomm_output(comm1_act, comm1_stby, nav1_act, nav1_stby, TWI_ADDRESS_NAV1_OUTPUT);
-			// navcomm_output(comm2_act, comm2_stby, nav2_act, nav2_stby, TWI_ADDRESS_NAV2_OUTPUT);
+			navcomm_output(comm2_act, comm2_stby, nav2_act, nav2_stby, TWI_ADDRESS_NAV2_OUTPUT);
 			output_changed = false;
 		}
 
+
 		if (true == input_changed)
 		{
+			uint8_t input[2];
+
 			/* This delay must be here because the LS7084 generates two pulses which
 			   are separated to each other by approximately 17ms. Therefore if we wait
 			   20ms only one pulse is latched (and everything works perfectly fine).
 			   Update: If the delay is decreased to 15ms then decoding works more smoothly,
 			   no jumps or stack problems. */
-			_delay_ms(15);
+			_delay_ms(15u);
 
 			/* Read inputs from NavCom modules. */
-			navcomm_input(TWI_ADDRESS_NAV1_INPUT, encoder1, button1);
-			// navcomm_input(TWI_ADDRESS_NAV2_INPUT, encoder2, button2);
-		
-			nav1_stby[0] = button1[0] + ASCII_ZERO;
+			navcomm_input(TWI_ADDRESS_NAV1_INPUT, navcomm1_encoder, navcomm1_button);
+			navcomm_input(TWI_ADDRESS_NAV2_INPUT, navcomm2_encoder, navcomm2_button);
 
-			if (-1 == encoder1[0])
-				nav1_stby[1] = 0 + ASCII_ZERO;
+			/* Check if any button was pressed (NavComm 1). */
+			for (uint8_t i = 0u; i <= NAVCOMM1_BUT_NAV_SWAP - NAVCOMM1_BUT_TEST; i++)
+			{
+				if (BUTTON_PRESSED == navcomm1_button[i])
+				{
+					input[0u] = NAVCOMM1_BUT_TEST + i;
+					input[1u] = navcomm1_button[i];
+					usart_send(input, 2u);
+				}
+			}
 
-			if (0 == encoder1[0])
-				nav1_stby[1] = 1 + ASCII_ZERO;
+			/* Check if any encoder was turned (NavComm 1). */
+			for (uint8_t i = 0u; i <= NAVCOMM1_ENC_NAV_FRACT - NAVCOMM1_ENC_COMM_INTGR; i++)
+			{
+				if ((ENC_ROT_LEFT == navcomm1_encoder[i]) || (ENC_ROT_RIGHT == navcomm1_encoder[i]))
+				{
+					input[0u] = NAVCOMM1_ENC_COMM_INTGR + i;
+					input[1u] = navcomm1_encoder[i];
+					usart_send(input, 2u);
+				}
+			}
 
-			if (1 == encoder1[0])
-				nav1_stby[1] = 2 + ASCII_ZERO;
+			/* Check if any button was pressed (NavComm 2). */
+			for (uint8_t i = 0u; i <= NAVCOMM2_BUT_NAV_SWAP - NAVCOMM2_BUT_TEST; i++)
+			{
+				if (BUTTON_PRESSED == navcomm2_button[i])
+				{
+					input[0u] = NAVCOMM2_BUT_TEST + i;
+					input[1u] = navcomm2_button[i];
+					usart_send(input, 2u);
+				}
+			}
 
-			usart_send(&nav1_stby[0], 1);
-			usart_send(&nav1_stby[1], 1);
-			
+			/* Check if any encoder was turned (NavComm 2). */
+			for (uint8_t i = 0u; i <= NAVCOMM2_ENC_NAV_FRACT - NAVCOMM2_ENC_COMM_INTGR; i++)
+			{
+				if ((ENC_ROT_LEFT == navcomm2_encoder[i]) || (ENC_ROT_RIGHT == navcomm2_encoder[i]))
+				{
+					input[0u] = NAVCOMM2_ENC_COMM_INTGR + i;
+					input[1u] = navcomm2_encoder[i];
+					usart_send(input, 2u);
+				}
+			}
+
 			mcp23016_latch_reset();
-			output_changed = true;
 			input_changed = false;
 		}
 	}
@@ -146,7 +180,7 @@ static void init(void)
 	twi_set_freq();
 	rotary_encoders_init();
 	mcp23016_init(TWI_ADDRESS_NAV1_INPUT);
-	// mcp23016_init(TWI_ADDRESS_NAV2_INPUT);
+	mcp23016_init(TWI_ADDRESS_NAV2_INPUT);
 }
 
 
