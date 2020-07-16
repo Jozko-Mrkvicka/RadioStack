@@ -7,10 +7,10 @@
 #include <string.h>
 #include <avr/io.h>
 
-#define DIPLAY_DRIVER_MAX_DATA_VALUE	15u
-#define DIPLAY_DRIVER_STRING_SIZE 		5u
-#define DIPLAY_DRIVER_DATA_SIZE			8u
-#define DIPLAY_DRIVER_MESSAGE_SIZE		18u
+#define DIPLAY_DRIVER_MAX_DATA_VALUE  15u
+#define NAVCOMM_STRING_LEN 	          5u
+#define DIPLAY_DRIVER_DATA_SIZE	      8u
+#define DIPLAY_DRIVER_MESSAGE_SIZE    18u
 
 #define MODE_HIGH 		0x10u
 
@@ -34,7 +34,7 @@
 #define CHAR_BLANK  15u
 
 void icm7228_create_message(uint8_t* message, uint8_t* data, uint8_t disp_num);
-void icm7228_convert_char_to_num(uint8_t* str);
+void icm7228_convert_char_to_code(uint8_t* str_in, uint8_t* str_out);
 
 #endif
 

@@ -8,6 +8,6 @@
 
 void usart_init();
 void usart_send(uint8_t *buffer, uint8_t size);
-void usart_receive(uint8_t *buffer, int num);
+void usart_receive(uint8_t *buffer, uint8_t size);
 
 #endif

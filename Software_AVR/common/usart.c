@@ -9,6 +9,12 @@ void usart_init()
 	uint8_t baud_rate_high_byte = 0x00u;
 	uint8_t baud_rate_low_byte =  0x19u;
 
+	// TODO: potential problem with setting bit to zero. Something like "~" and "&"  is missing.
+	// Check in all files.
+
+	// TODO: Add "const" keyword to function parameters.
+	
+
 	/* UCSRA - USART Control and Status Register A. */
 	UCSRA = (0u << TXC)   |  /* Transmit Complete.                          */
 			(0u << U2X)   |  /* Double USART transmission speed.            */
@@ -60,6 +66,10 @@ void usart_send(uint8_t *buffer, uint8_t size)
 
 		/* UDR - USART Data Register - writing to it the transmission starts. */
 		UDR = buffer[i];
+
+		// Debug
+		while (false == (UCSRA & (1u << UDRE)))
+			;
 	}
 }
 
@@ -68,7 +78,7 @@ void usart_receive(uint8_t *buffer, uint8_t size)
 {
 	for (uint8_t i = 0u; i < size; i++)
 	{
-		/* Wait for data to be received.
+		/* Wait for incoming data.
 		   UCSRA - USART Control and Status Register A.
 		     RXC - USART Receive Complete. */
 		while (false == (UCSRA & (1u << RXC)))

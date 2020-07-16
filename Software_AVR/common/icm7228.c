@@ -10,44 +10,42 @@
 static void icm7228_trunc_data_to_max_value(uint8_t* data);
 
 
-void icm7228_convert_char_to_num(uint8_t* str)
+void icm7228_convert_char_to_code(uint8_t* str_in, uint8_t* str_out)
 {
-	uint8_t i;
-
-	for (i = 0u; i < DIPLAY_DRIVER_STRING_SIZE; i++)
+	for (uint8_t i = 0u; i < NAVCOMM_STRING_LEN; i++)
 	{
-		switch (str[i])
+		switch (str_in[i])
 		{
 			case ASCII_H:
 			case ASCII_h:
-				str[i] = CHAR_H; 
+				str_out[i] = CHAR_H; 
 				break;
 
 			case ASCII_E:
 			case ASCII_e:
-				str[i] = CHAR_E;
+				str_out[i] = CHAR_E;
 				break;
 
 			case ASCII_L:
 			case ASCII_l:
-				str[i] = CHAR_L;
+				str_out[i] = CHAR_L;
 				break;
 
 			case ASCII_P:
 			case ASCII_p:
-				str[i] = CHAR_P;
+				str_out[i] = CHAR_P;
 				break;
 
 			case ASCII_MINUS:
-				str[i] = CHAR_DASH;
+				str_out[i] = CHAR_DASH;
 				break;
 
 			case ASCII_SPACE:
-				str[i] = CHAR_BLANK;
+				str_out[i] = CHAR_BLANK;
 				break;
 
 			default:
-				str[i] -= ASCII_ZERO;
+				str_out[i] = str_in[i] - ASCII_ZERO;
 				break;
 		}
 	}
@@ -96,7 +94,7 @@ void icm7228_create_message(uint8_t* message, uint8_t* data, uint8_t disp_num)
 static void icm7228_trunc_data_to_max_value(uint8_t* data)
 {
 	uint8_t i;
-	for (i = 0u; i < DIPLAY_DRIVER_STRING_SIZE; i++)
+	for (i = 0u; i < NAVCOMM_STRING_LEN; i++)
 		if (data[i] > DIPLAY_DRIVER_MAX_DATA_VALUE)
 			data[i] = DIPLAY_DRIVER_MAX_DATA_VALUE;
 }

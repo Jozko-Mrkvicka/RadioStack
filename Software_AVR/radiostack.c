@@ -3,77 +3,97 @@
 *************************************************************/
 #include "radiostack.h"
 
-#define BUTTON_NUM 4
-
 static void init(void);
 static void rotary_encoders_init(void);
 
 bool input_changed = false;
 
+
 int main(void) 
 {
-	// Debug
-	uint8_t heart_beat = 0u;
-
-	int comm1_act =  44;
-	int comm1_stby = 2;
-	int nav1_act =   3;
-	int nav1_stby =  4;
-
-	int comm2_act =  5;
-	int comm2_stby = 6;
-	int nav2_act =   7;
-	int nav2_stby =  8;
-
-	uint8_t button2[BUTTON_NUM];
-	uint8_t button1[BUTTON_NUM];
-
-	int8_t encoder1[4];
-	int8_t encoder2[4];
-
 	bool output_changed = true;
 
-	// unsigned char pole[40];
+	uint8_t comm1_act[NAVCOMM_STRING_LEN]  = "00000";
+	uint8_t comm1_stby[NAVCOMM_STRING_LEN] = "-----";
+	uint8_t nav1_act[NAVCOMM_STRING_LEN]   = " HELP";
+	uint8_t nav1_stby[NAVCOMM_STRING_LEN]  = "99999";
+
+	uint8_t comm2_act[NAVCOMM_STRING_LEN]  = "00000";
+	uint8_t comm2_stby[NAVCOMM_STRING_LEN] = "00000";
+	uint8_t nav2_act[NAVCOMM_STRING_LEN]   = "00000";
+	uint8_t nav2_stby[NAVCOMM_STRING_LEN]  = "00000";
+
+	uint8_t button1[BUTTON_NUM];
+	// uint8_t button2[BUTTON_NUM];
+
+	int8_t encoder1[4];
+	// int8_t encoder2[4];
 
 	init();
 
 	// Debug
-	// uint8_t znak = 'A';
-	uint8_t text[] = "Set this bit to zero when using synchronous operation.";
-	usart_init();
+	// uint8_t text[] = "Set this bit to zero when using synchronous operation.";
 
 	while (true)
 	{
-		// Debug
-		heart_beat++;
-		navcomm_output(comm1_act, comm1_stby, nav1_act, heart_beat, TWI_ADDRESS_NAV1_OUTPUT);
+		// usart_send(text, 54);
 
-		// usart_send(&znak, 1);
-		usart_send(text, 54);
-		// _delay_ms(10);
+		/* Data incoming ... */
+		if (0x80 == (UCSRA & (1u << RXC)))
+		{
+			uint8_t display_select = DISP_COMM1_STBY;
 
-		// prichadzaju data
-		// 	if (0x80 == (UCSRA & (1<<RXC)))
-		// 	{
-		// 		USART_receive(pole, 40);
-		// 		output_changed = true;
+			/* Read the display select command byte. */
+			usart_receive(&display_select, 1u);
 
-		// 	comm1_act =  ((pole[0]  - 48) * 10000) + ((pole[1]  - 48) * 1000) + ((pole[2]  - 48) * 100) + ((pole[3]  - 48) * 10) + (pole[4]  - 48);
-		// 	comm1_stby = ((pole[5]  - 48) * 10000) + ((pole[6]  - 48) * 1000) + ((pole[7]  - 48) * 100) + ((pole[8]  - 48) * 10) + (pole[9]  - 48);
-		// 	nav1_act =   ((pole[10] - 48) * 10000) + ((pole[11] - 48) * 1000) + ((pole[12] - 48) * 100) + ((pole[13] - 48) * 10) + (pole[14] - 48);
-		// 	nav1_stby =  ((pole[15] - 48) * 10000) + ((pole[16] - 48) * 1000) + ((pole[17] - 48) * 100) + ((pole[18] - 48) * 10) + (pole[19] - 48);
+			/* Read a string from a host and update specific display. Number of bytes to read
+			   is dependent on length of a display on which the string will be shown. */
+			switch (display_select)
+			{
+				case DISP_COMM1_ACT:
+					usart_receive(comm1_act, NAVCOMM_STRING_LEN);
+					break;
 
-		// 	comm2_act =  ((pole[20] - 48) * 10000) + ((pole[21] - 48) * 1000) + ((pole[22] - 48) * 100) + ((pole[23] - 48) * 10) + (pole[24] - 48);
-		// 	comm2_stby = ((pole[25] - 48) * 10000) + ((pole[26] - 48) * 1000) + ((pole[27] - 48) * 100) + ((pole[28] - 48) * 10) + (pole[29] - 48);
-		// 	nav2_act =   ((pole[30] - 48) * 10000) + ((pole[31] - 48) * 1000) + ((pole[32] - 48) * 100) + ((pole[33] - 48) * 10) + (pole[34] - 48);
-		// 	nav2_stby =  ((pole[35] - 48) * 10000) + ((pole[36] - 48) * 1000) + ((pole[37] - 48) * 100) + ((pole[38] - 48) * 10) + (pole[39] - 48);
-		// }
+				case DISP_COMM1_STBY:
+					usart_receive(comm1_stby, NAVCOMM_STRING_LEN);
+					break;
+
+				case DISP_NAV1_ACT:
+					usart_receive(nav1_act, NAVCOMM_STRING_LEN);
+					break;
+
+				case DISP_NAV1_STBY:
+					usart_receive(nav1_stby, NAVCOMM_STRING_LEN);
+					break;
+
+				case DISP_COMM2_ACT:
+					usart_receive(comm2_act, NAVCOMM_STRING_LEN);
+					break;
+
+				case DISP_COMM2_STBY:
+					usart_receive(comm2_stby, NAVCOMM_STRING_LEN);
+					break;
+
+				case DISP_NAV2_ACT:
+					usart_receive(nav2_act, NAVCOMM_STRING_LEN);
+					break;
+
+				case DISP_NAV2_STBY:
+					usart_receive(nav2_stby, NAVCOMM_STRING_LEN);
+					break;
+
+				default:
+					break;
+			}
+
+			output_changed = true;
+		}
 
 		if (true == output_changed)
 		{
 			/* Write outputs to NavCom modules. */
 			navcomm_output(comm1_act, comm1_stby, nav1_act, nav1_stby, TWI_ADDRESS_NAV1_OUTPUT);
-			navcomm_output(comm2_act, comm2_stby, nav2_act, nav2_stby, TWI_ADDRESS_NAV2_OUTPUT);
+			// navcomm_output(comm2_act, comm2_stby, nav2_act, nav2_stby, TWI_ADDRESS_NAV2_OUTPUT);
 			output_changed = false;
 		}
 
@@ -86,35 +106,25 @@ int main(void)
 			   no jumps or stack problems. */
 			_delay_ms(15);
 
-			/* Read inputs from NavCom1/2 modules. */
+			/* Read inputs from NavCom modules. */
 			navcomm_input(TWI_ADDRESS_NAV1_INPUT, encoder1, button1);
-			navcomm_input(TWI_ADDRESS_NAV2_INPUT, encoder2, button2);
+			// navcomm_input(TWI_ADDRESS_NAV2_INPUT, encoder2, button2);
 		
-			// USART_send(encoder2, 4);
-			// _delay_ms(10);
+			nav1_stby[0] = button1[0] + ASCII_ZERO;
 
-			comm1_act  += encoder1[0];
-			comm1_stby += encoder1[1];
-			nav1_act   += encoder1[2];
-			nav1_stby  += encoder1[3];
+			if (-1 == encoder1[0])
+				nav1_stby[1] = 0 + ASCII_ZERO;
 
-			comm2_act  += encoder2[0];
-			comm2_stby += encoder2[1];
-			nav2_act   += encoder2[2];
-			nav2_stby  += encoder2[3];
+			if (0 == encoder1[0])
+				nav1_stby[1] = 1 + ASCII_ZERO;
 
-			comm1_act  += button1[0] * 10;
-			comm1_stby += button1[1] * 10;
-			nav1_act   += button1[2] * 10;
-			nav1_stby  += button1[3] * 10;
+			if (1 == encoder1[0])
+				nav1_stby[1] = 2 + ASCII_ZERO;
 
-			comm2_act  += button2[0] * 10;
-			comm2_stby += button2[1] * 10;
-			nav2_act   += button2[2] * 10;
-			nav2_stby  += button2[3] * 10;
-
+			usart_send(&nav1_stby[0], 1);
+			usart_send(&nav1_stby[1], 1);
+			
 			mcp23016_latch_reset();
-
 			output_changed = true;
 			input_changed = false;
 		}
@@ -136,7 +146,7 @@ static void init(void)
 	twi_set_freq();
 	rotary_encoders_init();
 	mcp23016_init(TWI_ADDRESS_NAV1_INPUT);
-	mcp23016_init(TWI_ADDRESS_NAV2_INPUT);
+	// mcp23016_init(TWI_ADDRESS_NAV2_INPUT);
 }
 
 
