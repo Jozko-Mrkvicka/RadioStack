@@ -20,9 +20,6 @@
 #define NAVCOMM_BUTTON_NUM   4u
 #define NAVCOMM_ENCODER_NUM  4u
 
-#define BUTTON_PRESSED   1u
-#define BUTTON_RELEASED  0u
-
 /* NavComm 1 input definition. */
 #define NAVCOMM1_BUT_TEST        0u
 #define NAVCOMM1_BUT_COMM_SWAP   1u
@@ -43,24 +40,29 @@
 #define NAVCOMM2_ENC_NAV_INTGR   14u
 #define NAVCOMM2_ENC_NAV_FRACT   15u
 
-#define DISP_COMM1_ACT   0u
-#define DISP_COMM1_STBY  1u
-#define DISP_NAV1_ACT    2u
-#define DISP_NAV1_STBY   3u
-#define DISP_COMM2_ACT   4u
-#define DISP_COMM2_STBY  5u
-#define DISP_NAV2_ACT    6u
-#define DISP_NAV2_STBY   7u
+/* NavComm 1 output definition. */
+#define DISP_COMM1_ACT     0u
+#define DISP_COMM1_STBY    1u
+#define DISP_NAV1_ACT      2u
+#define DISP_NAV1_STBY     3u
+#define DISP_NAVCOMM1_LED  4u
 
-//                             7 6 5 4 3  2  1  0 
-// TWI address of MCP23016 is "0 1 0 0 A2 A1 A0 R/~W"
-// TWI address of PCF8574A is "0 1 1 1 A2 A1 A0 R/~W"
-// TWI address of PCF8574  is "0 1 0 0 A2 A1 A0 R/~W"
+/* NavComm 2 output definition. */
+#define DISP_COMM2_ACT     5u
+#define DISP_COMM2_STBY    6u
+#define DISP_NAV2_ACT      7u
+#define DISP_NAV2_STBY     8u
+#define DISP_NAVCOMM2_LED  9u
 
-#define TWI_ADDRESS_NAV1_OUTPUT  0x72 // PCF8574A
-#define TWI_ADDRESS_NAV1_INPUT   0x42 // MCP23016
+/*                             7 6 5 4 3  2  1  0 
+   TWI address of MCP23016 is "0 1 0 0 A2 A1 A0 R/~W"
+   TWI address of PCF8574A is "0 1 1 1 A2 A1 A0 R/~W"
+   TWI address of PCF8574  is "0 1 0 0 A2 A1 A0 R/~W"
+*/
+#define TWI_ADDRESS_NAV1_OUTPUT  0x72  /* PCF8574A */
+#define TWI_ADDRESS_NAV1_INPUT   0x42  /* MCP23016 */
 
-#define TWI_ADDRESS_NAV2_OUTPUT  0x74 // PCF8574A
-#define TWI_ADDRESS_NAV2_INPUT   0x44 // MCP23016
+#define TWI_ADDRESS_NAV2_OUTPUT  0x74  /* PCF8574A */
+#define TWI_ADDRESS_NAV2_INPUT   0x44  /* MCP23016 */
 
 #endif

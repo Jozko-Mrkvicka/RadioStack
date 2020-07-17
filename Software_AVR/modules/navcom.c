@@ -7,7 +7,12 @@ static void navcomm_input_convert_button_data(uint8_t gp_reg, uint8_t *button);
 static void navcomm_input_convert_encoder_data(uint8_t intcap_reg, uint8_t gp_reg, uint8_t *encoder);
 
 
-void navcomm_output(uint8_t* str_1, uint8_t* str_2, uint8_t* str_3, uint8_t* str_4, uint8_t address)
+void navcomm_output(uint8_t* str_1,
+					uint8_t* str_2,
+					uint8_t* str_3,
+					uint8_t* str_4,
+					uint8_t* led,
+					uint8_t address)
 {
 	uint8_t message[DIPLAY_DRIVER_MESSAGE_SIZE];
 
@@ -15,15 +20,17 @@ void navcomm_output(uint8_t* str_1, uint8_t* str_2, uint8_t* str_3, uint8_t* str
 	uint8_t str_2_converted[NAVCOMM_STRING_LEN];
 	uint8_t str_3_converted[NAVCOMM_STRING_LEN];
 	uint8_t str_4_converted[NAVCOMM_STRING_LEN];
+	uint8_t led_converted[NAVCOMM_LED_NUM];
 
 	uint8_t data_1[DIPLAY_DRIVER_DATA_SIZE];
 	uint8_t data_2[DIPLAY_DRIVER_DATA_SIZE];
 	uint8_t data_3[DIPLAY_DRIVER_DATA_SIZE];
 
-	icm7228_convert_char_to_code(str_1, str_1_converted);
-	icm7228_convert_char_to_code(str_2, str_2_converted);
-	icm7228_convert_char_to_code(str_3, str_3_converted);
-	icm7228_convert_char_to_code(str_4, str_4_converted);
+	icm7228_convert_char_to_code(str_1, str_1_converted, NAVCOMM_STRING_LEN);
+	icm7228_convert_char_to_code(str_2, str_2_converted, NAVCOMM_STRING_LEN);
+	icm7228_convert_char_to_code(str_3, str_3_converted, NAVCOMM_STRING_LEN);
+	icm7228_convert_char_to_code(str_4, str_4_converted, NAVCOMM_STRING_LEN);
+	icm7228_convert_char_to_code(led,   led_converted,   NAVCOMM_LED_NUM);
 
 	data_1[0u] = str_1_converted[0u];  /* "COMM USE"  */ 
 	data_1[1u] = str_1_converted[1u];  /* "COMM USE"  */ 
@@ -47,10 +54,10 @@ void navcomm_output(uint8_t* str_1, uint8_t* str_2, uint8_t* str_3, uint8_t* str
 	data_3[1u] = str_4_converted[2u];  /* "NAV STBY"  */ 
 	data_3[2u] = str_4_converted[3u];  /* "NAV STBY"  */ 
 	data_3[3u] = str_4_converted[4u];  /* "NAV STBY"  */ 
-	data_3[4u] = 8u; //CHAR_DASH; //pokus
-	data_3[5u] = 8u; //CHAR_DASH; //pokus
-	data_3[6u] = CHAR_DASH; 
-	data_3[7u] = CHAR_DASH; 
+	data_3[4u] = led_converted[0u];    /* "TEST LED"  */
+	data_3[5u] = led_converted[1u];    /* "IDENT LED" */
+	data_3[6u] = CHAR_BLANK;           /* Not used.   */
+	data_3[7u] = CHAR_BLANK;           /* Not used.   */
 
 	icm7228_create_message(message, data_1, DRIVER_1_WRITE_HIGH);
 	twi_transmit_data(message, DIPLAY_DRIVER_MESSAGE_SIZE, address);

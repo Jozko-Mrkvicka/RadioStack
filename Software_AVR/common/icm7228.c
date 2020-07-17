@@ -10,9 +10,9 @@
 static void icm7228_trunc_data_to_max_value(uint8_t* data);
 
 
-void icm7228_convert_char_to_code(uint8_t* str_in, uint8_t* str_out)
+void icm7228_convert_char_to_code(uint8_t* str_in, uint8_t* str_out, uint8_t len)
 {
-	for (uint8_t i = 0u; i < NAVCOMM_STRING_LEN; i++)
+	for (uint8_t i = 0u; i < len; i++)
 	{
 		switch (str_in[i])
 		{
@@ -37,7 +37,11 @@ void icm7228_convert_char_to_code(uint8_t* str_in, uint8_t* str_out)
 				break;
 
 			case ASCII_MINUS:
-				str_out[i] = CHAR_DASH;
+				str_out[i] = LED_OFF; /* Which is the same as CHAR_DASH. */
+				break;
+
+			case ASCII_PLUS:
+				str_out[i] = LED_ON;
 				break;
 
 			case ASCII_SPACE:
