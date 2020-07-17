@@ -44,8 +44,10 @@ void mcp23016_init(uint8_t address)
 }
 
 
-void mcp23016_read_input(uint8_t *data, uint8_t slave_addr, uint8_t command)
+uint8_t mcp23016_read_input(uint8_t *data, uint8_t slave_addr, uint8_t command)
 {
+	uint8_t twi_status = 0xFFu;
+
 	twi_transmit_start();
 
 	/* Select slave device (for writing). */
@@ -60,10 +62,13 @@ void mcp23016_read_input(uint8_t *data, uint8_t slave_addr, uint8_t command)
 	/* Select slave device (for reading). */
 	twi_transmit_byte(slave_addr | TW_READ);
 
-	/* Read one register pair from MCP23016. */
-	twi_receive_byte(&data[0u], ACK);
-	twi_receive_byte(&data[1u], NACK);
+	/* Read one register pair from MCP23016. I can`t remember why :-(
+	   but second received byte must be replied with NACK. */
+	twi_status = twi_receive_byte(&data[0u], ACK);
+	twi_status = twi_receive_byte(&data[1u], NACK);
 
 	twi_transmit_stop();
+
+	return twi_status;
 }
 

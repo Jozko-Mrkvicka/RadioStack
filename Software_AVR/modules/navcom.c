@@ -63,16 +63,20 @@ void navcomm_output(uint8_t* str_1, uint8_t* str_2, uint8_t* str_3, uint8_t* str
 }
 
 
-void navcomm_input(uint8_t address, uint8_t* encoder, uint8_t* button)
+uint8_t navcomm_input(uint8_t address, uint8_t* encoder, uint8_t* button)
 {
+	uint8_t twi_status = 0xFFu;
+
 	uint8_t gp_reg[2u];
 	uint8_t intcap_reg[2u];
 
-	mcp23016_read_input(gp_reg,     address, ACCESS_TO_GP0);
-	mcp23016_read_input(intcap_reg, address, ACCESS_TO_INTCAP0);
+	twi_status = mcp23016_read_input(gp_reg,     address, ACCESS_TO_GP0);
+	twi_status = mcp23016_read_input(intcap_reg, address, ACCESS_TO_INTCAP0);
 
 	navcomm_input_convert_encoder_data(intcap_reg[1u], gp_reg[0u], encoder);
 	navcomm_input_convert_button_data(gp_reg[0u], button);
+
+	return twi_status;
 }
 
 

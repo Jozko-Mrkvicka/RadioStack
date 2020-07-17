@@ -3,39 +3,46 @@
 *************************************************************/
 #include "radiostack.h"
 
-static void init(void);
 static void rotary_encoders_init(void);
+static bool is_module_connected(uint8_t address);
 
 bool input_changed = false;
 
 
 int main(void) 
 {
-	bool output_changed = true;
-
 	/* NavComm 1 output variables. */
-	uint8_t comm1_act[NAVCOMM_STRING_LEN]  = "00000";
+	uint8_t comm1_act[NAVCOMM_STRING_LEN]  = "-----";
 	uint8_t comm1_stby[NAVCOMM_STRING_LEN] = "-----";
-	uint8_t nav1_act[NAVCOMM_STRING_LEN]   = " HELP";
-	uint8_t nav1_stby[NAVCOMM_STRING_LEN]  = "99999";
+	uint8_t nav1_act[NAVCOMM_STRING_LEN]   = "-----";
+	uint8_t nav1_stby[NAVCOMM_STRING_LEN]  = "-----";
 
 	/* NavComm 1 input variables. */
 	uint8_t navcomm1_button[NAVCOMM_BUTTON_NUM]   = {0u, 0u, 0u, 0u};
 	uint8_t navcomm1_encoder[NAVCOMM_ENCODER_NUM] = {0u, 0u, 0u, 0u};
 
-
 	/* NavComm 2 output variables. */
-	uint8_t comm2_act[NAVCOMM_STRING_LEN]  = "00000";
-	uint8_t comm2_stby[NAVCOMM_STRING_LEN] = "00000";
-	uint8_t nav2_act[NAVCOMM_STRING_LEN]   = "00000";
-	uint8_t nav2_stby[NAVCOMM_STRING_LEN]  = "00000";
+	uint8_t comm2_act[NAVCOMM_STRING_LEN]  = "-----";
+	uint8_t comm2_stby[NAVCOMM_STRING_LEN] = "-----";
+	uint8_t nav2_act[NAVCOMM_STRING_LEN]   = "-----";
+	uint8_t nav2_stby[NAVCOMM_STRING_LEN]  = "-----";
 
 	/* NavComm 2 input variables. */
 	uint8_t navcomm2_button[NAVCOMM_BUTTON_NUM]   = {0u, 0u, 0u, 0u};
 	uint8_t navcomm2_encoder[NAVCOMM_ENCODER_NUM] = {0u, 0u, 0u, 0u};
 
-	init();
+	usart_init();
+	twi_set_freq();
+	rotary_encoders_init();
+	mcp23016_init(TWI_ADDRESS_NAV1_INPUT);
+	mcp23016_init(TWI_ADDRESS_NAV2_INPUT);
 
+	bool navcomm1_connected = is_module_connected(TWI_ADDRESS_NAV1_OUTPUT);
+	bool navcomm2_connected = is_module_connected(TWI_ADDRESS_NAV2_OUTPUT);
+
+	/* Write outputs to NavCom modules. */
+	navcomm_output(comm1_act, comm1_stby, nav1_act, nav1_stby, TWI_ADDRESS_NAV1_OUTPUT);
+	navcomm_output(comm2_act, comm2_stby, nav2_act, nav2_stby, TWI_ADDRESS_NAV2_OUTPUT);
 
 	while (true)
 	{
@@ -87,18 +94,10 @@ int main(void)
 					break;
 			}
 
-			output_changed = true;
-		}
-
-
-		if (true == output_changed)
-		{
 			/* Write outputs to NavCom modules. */
 			navcomm_output(comm1_act, comm1_stby, nav1_act, nav1_stby, TWI_ADDRESS_NAV1_OUTPUT);
 			navcomm_output(comm2_act, comm2_stby, nav2_act, nav2_stby, TWI_ADDRESS_NAV2_OUTPUT);
-			output_changed = false;
 		}
-
 
 		if (true == input_changed)
 		{
@@ -111,51 +110,59 @@ int main(void)
 			   no jumps or stack problems. */
 			_delay_ms(15u);
 
-			/* Read inputs from NavCom modules. */
-			navcomm_input(TWI_ADDRESS_NAV1_INPUT, navcomm1_encoder, navcomm1_button);
-			navcomm_input(TWI_ADDRESS_NAV2_INPUT, navcomm2_encoder, navcomm2_button);
-
-			/* Check if any button was pressed (NavComm 1). */
-			for (uint8_t i = 0u; i <= NAVCOMM1_BUT_NAV_SWAP - NAVCOMM1_BUT_TEST; i++)
+			/* Read inputs from NavCom 1 module. */
+			if (navcomm1_connected == true)
 			{
-				if (BUTTON_PRESSED == navcomm1_button[i])
+				navcomm_input(TWI_ADDRESS_NAV1_INPUT, navcomm1_encoder, navcomm1_button);
+
+				/* Check if any button was pressed (NavComm 1). */
+				for (uint8_t i = 0u; i <= NAVCOMM1_BUT_NAV_SWAP - NAVCOMM1_BUT_TEST; i++)
 				{
-					input[0u] = NAVCOMM1_BUT_TEST + i;
-					input[1u] = navcomm1_button[i];
-					usart_send(input, 2u);
+					if (BUTTON_PRESSED == navcomm1_button[i])
+					{
+						input[0u] = NAVCOMM1_BUT_TEST + i;
+						input[1u] = navcomm1_button[i];
+						usart_send(input, 2u);
+					}
+				}
+
+				/* Check if any encoder was turned (NavComm 1). */
+				for (uint8_t i = 0u; i <= NAVCOMM1_ENC_NAV_FRACT - NAVCOMM1_ENC_COMM_INTGR; i++)
+				{
+					if ((ENC_ROT_LEFT == navcomm1_encoder[i]) || (ENC_ROT_RIGHT == navcomm1_encoder[i]))
+					{
+						input[0u] = NAVCOMM1_ENC_COMM_INTGR + i;
+						input[1u] = navcomm1_encoder[i];
+						usart_send(input, 2u);
+					}
 				}
 			}
 
-			/* Check if any encoder was turned (NavComm 1). */
-			for (uint8_t i = 0u; i <= NAVCOMM1_ENC_NAV_FRACT - NAVCOMM1_ENC_COMM_INTGR; i++)
+			/* Read inputs from NavCom 2 module. */
+			if (navcomm2_connected == true)
 			{
-				if ((ENC_ROT_LEFT == navcomm1_encoder[i]) || (ENC_ROT_RIGHT == navcomm1_encoder[i]))
-				{
-					input[0u] = NAVCOMM1_ENC_COMM_INTGR + i;
-					input[1u] = navcomm1_encoder[i];
-					usart_send(input, 2u);
-				}
-			}
+				navcomm_input(TWI_ADDRESS_NAV2_INPUT, navcomm2_encoder, navcomm2_button);
 
-			/* Check if any button was pressed (NavComm 2). */
-			for (uint8_t i = 0u; i <= NAVCOMM2_BUT_NAV_SWAP - NAVCOMM2_BUT_TEST; i++)
-			{
-				if (BUTTON_PRESSED == navcomm2_button[i])
+				/* Check if any button was pressed (NavComm 2). */
+				for (uint8_t i = 0u; i <= NAVCOMM2_BUT_NAV_SWAP - NAVCOMM2_BUT_TEST; i++)
 				{
-					input[0u] = NAVCOMM2_BUT_TEST + i;
-					input[1u] = navcomm2_button[i];
-					usart_send(input, 2u);
+					if (BUTTON_PRESSED == navcomm2_button[i])
+					{
+						input[0u] = NAVCOMM2_BUT_TEST + i;
+						input[1u] = navcomm2_button[i];
+						usart_send(input, 2u);
+					}
 				}
-			}
 
-			/* Check if any encoder was turned (NavComm 2). */
-			for (uint8_t i = 0u; i <= NAVCOMM2_ENC_NAV_FRACT - NAVCOMM2_ENC_COMM_INTGR; i++)
-			{
-				if ((ENC_ROT_LEFT == navcomm2_encoder[i]) || (ENC_ROT_RIGHT == navcomm2_encoder[i]))
+				/* Check if any encoder was turned (NavComm 2). */
+				for (uint8_t i = 0u; i <= NAVCOMM2_ENC_NAV_FRACT - NAVCOMM2_ENC_COMM_INTGR; i++)
 				{
-					input[0u] = NAVCOMM2_ENC_COMM_INTGR + i;
-					input[1u] = navcomm2_encoder[i];
-					usart_send(input, 2u);
+					if ((ENC_ROT_LEFT == navcomm2_encoder[i]) || (ENC_ROT_RIGHT == navcomm2_encoder[i]))
+					{
+						input[0u] = NAVCOMM2_ENC_COMM_INTGR + i;
+						input[1u] = navcomm2_encoder[i];
+						usart_send(input, 2u);
+					}
 				}
 			}
 
@@ -171,16 +178,6 @@ int main(void)
 ISR (INT0_vect)
 {
 	input_changed = true;
-}
-
-
-static void init(void)
-{
-	usart_init();
-	twi_set_freq();
-	rotary_encoders_init();
-	mcp23016_init(TWI_ADDRESS_NAV1_INPUT);
-	mcp23016_init(TWI_ADDRESS_NAV2_INPUT);
 }
 
 
@@ -208,5 +205,32 @@ static void rotary_encoders_init(void)
 	   1 1 - The rising edge of INT0 generates an interrupt request. */
 	MCUCR |=  (1 << ISC01);
 	MCUCR &= ~(1 << ISC00);
+}
+
+
+/* This function pings a module to find out if it is connected
+   to the mainboard. To ping it the function transmits one address
+   byte via TWI bus. Then the function checks return code (TWI status).
+   If return code is TW_MT_SLA_ACK (0x18, SLA+W transmitted, ACK received)
+   then the module is considered to be connected.
+   If return code is TW_MT_SLA_NACK (0x20, SLA+W transmitted, NACK received)
+   then the module is considered to be not connected. */
+static bool is_module_connected(uint8_t address)
+{
+	uint8_t twi_status;
+	bool connected = false;
+
+	twi_transmit_start();
+
+	twi_status = twi_transmit_byte(address | TW_WRITE);
+
+	twi_transmit_stop();
+
+	if (TW_MT_SLA_ACK == twi_status)
+		connected = true;
+	else
+		connected = false;
+
+	return connected;
 }
 

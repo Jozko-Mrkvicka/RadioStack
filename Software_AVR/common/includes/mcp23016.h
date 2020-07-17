@@ -18,6 +18,6 @@
 
 void mcp23016_latch_reset(void);
 void mcp23016_init(uint8_t address);
-void mcp23016_read_input(uint8_t *data, uint8_t slave_addr, uint8_t command);
+uint8_t mcp23016_read_input(uint8_t *data, uint8_t slave_addr, uint8_t command);
 
 #endif
