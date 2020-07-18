@@ -12,9 +12,6 @@ void usart_init()
 	// TODO: potential problem with setting bit to zero. Something like "~" and "&"  is missing.
 	// Check in all files.
 
-	// TODO: Add "const" keyword to function parameters.
-	
-
 	/* UCSRA - USART Control and Status Register A. */
 	UCSRA = (0u << TXC)   |  /* Transmit Complete.                          */
 			(0u << U2X)   |  /* Double USART transmission speed.            */
