@@ -41,7 +41,7 @@ CC = gcc
 compile = $(CC) -c $< -o bin/$@
 
 # link = $(CC) $(param_link) bin/$< $(common_obj) $(modules_obj) -o bin/$@
-link = $(CC) bin/rs2fsx.o bin/IPCuser.o -o bin/rs2fsx.exe
+link = $(CC) bin/rs2fsx.o bin/rs2fsx_navcomm.o bin/IPCuser.o -o bin/rs2fsx.exe
 
 
 all: clean rs2fsx.exe
@@ -50,40 +50,34 @@ all: clean rs2fsx.exe
 	@echo "# ********************** DONE!!! ************************* "
 	@echo "###########################################################"
 
-rs2fsx.exe: rs2fsx.o IPCuser.o #common_folder modules_folder
+rs2fsx.exe: rs2fsx.o IPCuser.o rs2fsx_navcomm.o #common_folder modules_folder
 	@echo \n
 	@echo "###########################################################"
-	@echo "# RS2FSX -> LINKING TO RS2FSX.EXE ...                      "
+	@echo "# RS2FSX -> LINKING RS2FSX.EXE ...                        "
 	@echo "###########################################################"
 	$(link)
 
 rs2fsx.o: rs2fsx.c
 	@echo \n
 	@echo "###########################################################"
-	@echo "# RS2FSX -> COMPILING TO RS2FSX.O ...                      "
+	@echo "# RS2FSX -> COMPILING RS2FSX.O ...                        "
+	@echo "###########################################################"
+	$(compile)
+
+rs2fsx_navcomm.o: rs2fsx_navcomm.c
+	@echo \n
+	@echo "###########################################################"
+	@echo "# RS2FSX_NAVCOMM -> COMPILING RS2FSX_NAVCOMM.O ...        "
 	@echo "###########################################################"
 	$(compile)
 
 IPCuser.o: IPCuser.c
 	@echo \n
 	@echo "###########################################################"
-	@echo "# RS2FSX -> COMPILING TO IPCUSER.O ...                     "
+	@echo "# RS2FSX -> COMPILING IPCUSER.O ...                       "
 	@echo "###########################################################"
 	$(compile)
 
-# common_folder:
-# 	@echo \n
-# 	@echo "###########################################################"
-# 	@echo "# RADIOSTACK -> CALLING COMMON MAKEFILE ...                "
-# 	@echo "###########################################################"
-# 	$(MAKE) -C common
-
-# modules_folder:
-# 	@echo \n
-# 	@echo "###########################################################"
-# 	@echo "# RADIOSTACK -> CALLING MODULES MAKEFILE ...               "
-# 	@echo "###########################################################"
-# 	$(MAKE) -C modules
 
 clean:
 	@echo \n
