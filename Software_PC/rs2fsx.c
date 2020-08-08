@@ -41,14 +41,39 @@ int main(int argc, _TCHAR* argv[])
 	port = rs2fsx_comport_open(argv[1]);
 	WaitForSingleObject(osReadWrite.hEvent, TIMEOUT);
 	rs2fsx_connect_fsx();
-	rs2fsx_init_display(port, osReadWrite);
+	// rs2fsx_init_display(port, osReadWrite);
+
+	// debug
+	uint16_t counter;
+	DWORD Result;
+	int i = 0;
+	bool reset = false;
 
 	while (!_kbhit()) 
 	{ 
+		// debug
+		i++;
+		if (i > 1000)
+		{
+			FSUIPC_Read(0x3364, 2u, &counter, &Result);
+			FSUIPC_Process(&Result);
+			if (counter != 0x0000)
+				reset = true;
+
+			if ((reset == true) && (counter == 0x0000))
+			{
+				reset = false;
+				rs2fsx_init_display(port, osReadWrite);
+			}
+
+			i = 0;
+		}
+
+
 		rs2fsx_heartbeat();
 
 		is_input_received = rs2fsx_comport_read(port, osReadWrite, &input);
-
+// printf("%d\n", is_input_received);
 		if (true == is_input_received)
 		{
 			rs2fsx_command_interpreter(port, osReadWrite, input);
@@ -66,98 +91,98 @@ static void rs2fsx_command_interpreter(HANDLE port, OVERLAPPED osReadWrite, stru
 {
 	switch (input.address)
 	{
-		case ADDR_NAVCOMM1_BUT_TEST:
-			break;
-
 		case ADDR_NAVCOMM1_BUT_COMM_SWAP:
-			// rs2fsx_navcomm_comm_swap_process(port,
-			// 								 osReadWrite,
-			// 								 FSX_ADDR_NAVCOMM_FREQ_SWAP,
-			// 								 COMM1_FREQ_SWAP,
-			// 								 &navcomm1.output.display.comm_act,
-			// 								 &navcomm1.output.display.comm_stby);
-			break;
-
-		case ADDR_NAVCOMM1_BUT_IDENT:
+			rs2fsx_navcomm_comm_swap(port, osReadWrite, COMM1_FREQ_SWAP);
 			break;
 
 		case ADDR_NAVCOMM1_BUT_NAV_SWAP:
+			rs2fsx_navcomm_comm_swap(port, osReadWrite, NAV1_FREQ_SWAP);
+			break;
+
+		case ADDR_NAVCOMM1_BUT_TEST:
+			break;
+
+		case ADDR_NAVCOMM1_BUT_IDENT:
+			rs2fsx_navcomm_ident(port, osReadWrite, NAV1_SOUND, ADDR_DISP_NAVCOMM1_LED);
 			break;
 
 		case ADDR_NAVCOMM1_ENC_COMM_INTGR:
-			rs2fsx_navcomm_comm_intgr_process(port,
-											  osReadWrite,
-											  input.value,
-											  FSX_ADDR_COM1_STBY,
-											  ADDR_DISP_COMM1_STBY);
+			rs2fsx_navcomm_comm_intgr(port,
+									  osReadWrite,
+									  input.value,
+									  FSX_ADDR_COM1_STBY,
+									  ADDR_DISP_COMM1_STBY);
 			break;
 
 		case ADDR_NAVCOMM1_ENC_COMM_FRACT:
-			rs2fsx_navcomm_comm_fract_process(port,
-											  osReadWrite,
-											  input.value,
-											  FSX_ADDR_COM1_STBY,
-											  ADDR_DISP_COMM1_STBY);
+			rs2fsx_navcomm_comm_fract(port,
+									  osReadWrite,
+									  input.value,
+									  FSX_ADDR_COM1_STBY,
+									  ADDR_DISP_COMM1_STBY);
 			break;
 
 		case ADDR_NAVCOMM1_ENC_NAV_INTGR:
-			rs2fsx_navcomm_nav_intgr_process(port,
-											 osReadWrite,
-											 input.value,
-											 FSX_ADDR_NAV1_STBY,
-											 ADDR_DISP_NAV1_STBY);
+			rs2fsx_navcomm_nav_intgr(port,
+									 osReadWrite,
+									 input.value,
+									 FSX_ADDR_NAV1_STBY,
+									 ADDR_DISP_NAV1_STBY);
 			break;
 
 		case ADDR_NAVCOMM1_ENC_NAV_FRACT:
-			rs2fsx_navcomm_nav_fract_process(port,
-											 osReadWrite,
-											 input.value,
-											 FSX_ADDR_NAV1_STBY,
-											 ADDR_DISP_NAV1_STBY);
+			rs2fsx_navcomm_nav_fract(port,
+									 osReadWrite,
+									 input.value,
+									 FSX_ADDR_NAV1_STBY,
+									 ADDR_DISP_NAV1_STBY);
+			break;
+
+		case ADDR_NAVCOMM2_BUT_COMM_SWAP:
+			rs2fsx_navcomm_comm_swap(port, osReadWrite, COMM2_FREQ_SWAP);
+			break;
+
+		case ADDR_NAVCOMM2_BUT_NAV_SWAP:
+			rs2fsx_navcomm_comm_swap(port, osReadWrite, NAV2_FREQ_SWAP);
 			break;
 
 		case ADDR_NAVCOMM2_BUT_TEST:
 			break;
 
-		case ADDR_NAVCOMM2_BUT_COMM_SWAP:
-			break;
-
 		case ADDR_NAVCOMM2_BUT_IDENT:
-			break;
-
-		case ADDR_NAVCOMM2_BUT_NAV_SWAP:
+			rs2fsx_navcomm_ident(port, osReadWrite, NAV2_SOUND, ADDR_DISP_NAVCOMM2_LED);
 			break;
 
 		case ADDR_NAVCOMM2_ENC_COMM_INTGR:
-			rs2fsx_navcomm_comm_intgr_process(port,
-											  osReadWrite,
-											  input.value,
-											  FSX_ADDR_COM2_STBY,
-											  ADDR_DISP_COMM2_STBY);
+			rs2fsx_navcomm_comm_intgr(port,
+									  osReadWrite,
+									  input.value,
+									  FSX_ADDR_COM2_STBY,
+									  ADDR_DISP_COMM2_STBY);
 			break;
 
 		case ADDR_NAVCOMM2_ENC_COMM_FRACT:
-			rs2fsx_navcomm_comm_fract_process(port,
-											  osReadWrite,
-											  input.value,
-											  FSX_ADDR_COM2_STBY,
-											  ADDR_DISP_COMM2_STBY);
+			rs2fsx_navcomm_comm_fract(port,
+									  osReadWrite,
+									  input.value,
+									  FSX_ADDR_COM2_STBY,
+									  ADDR_DISP_COMM2_STBY);
 			break;
 
 		case ADDR_NAVCOMM2_ENC_NAV_INTGR:
-			rs2fsx_navcomm_nav_intgr_process(port,
-											 osReadWrite,
-											 input.value,
-											 FSX_ADDR_NAV2_STBY,
-											 ADDR_DISP_NAV2_STBY);
+			rs2fsx_navcomm_nav_intgr(port,
+									 osReadWrite,
+									 input.value,
+									 FSX_ADDR_NAV2_STBY,
+									 ADDR_DISP_NAV2_STBY);
 			break;
 
 		case ADDR_NAVCOMM2_ENC_NAV_FRACT:
-			rs2fsx_navcomm_nav_fract_process(port,
-											 osReadWrite,
-											 input.value,
-											 FSX_ADDR_NAV2_STBY,
-											 ADDR_DISP_NAV2_STBY);
+			rs2fsx_navcomm_nav_fract(port,
+									 osReadWrite,
+									 input.value,
+									 FSX_ADDR_NAV2_STBY,
+									 ADDR_DISP_NAV2_STBY);
 			break;
 	}
 }

@@ -69,6 +69,8 @@ bool rs2fsx_comport_read(HANDLE port, OVERLAPPED osReadWrite, struct input_t *in
 
 	/* Asynchronously read first byte (address of a button). */
 	retVal = ReadFile(port, &input->address, 1, &dwRead, &osReadWrite);
+	// if (retVal == true)
+		// printf("input->address = %d\n", input->address);
 	if ((true == retVal) && (INVALID_INPUT != input->address))
 	{
 		do {
@@ -86,13 +88,72 @@ bool rs2fsx_comport_read(HANDLE port, OVERLAPPED osReadWrite, struct input_t *in
 }
 
 
-bool rs2fsx_comport_write(HANDLE port, OVERLAPPED osReadWrite, uint8_t address, uint8_t *value, uint8_t len)
+/*bool*/void rs2fsx_comport_write(HANDLE port, OVERLAPPED osReadWrite, uint8_t address, uint8_t *value, uint8_t len)
 {
 	DWORD dwWritten;
+	// bool retVal;
+	// DWORD dw;
+	// DWORD lpNumberOfBytesTransferred;
+	// bool bWait = true;
 
-	WriteFile(port, &address, 1, &dwWritten, &osReadWrite);
-	WriteFile(port, value, len, &dwWritten, &osReadWrite);
+	WriteFile(port, &address, 1u, NULL, &osReadWrite);
+	Sleep(1u);
 
-	Sleep(20);
+	for (uint8_t i = 0u; i < len; i++)
+	{
+		WriteFile(port, &value[i], 1, NULL, &osReadWrite);
+		Sleep(1);
+	}
+
+	// WriteFile(port, &value[1], 1, NULL/*&dwWritten*/, &osReadWrite);
+	// Sleep(delay);
+
+	// WriteFile(port, &value[2], 1, NULL/*&dwWritten*/, &osReadWrite);
+	// Sleep(delay);
+
+	// WriteFile(port, &value[3], 1, NULL/*&dwWritten*/, &osReadWrite);
+	// Sleep(delay);
+
+	// WriteFile(port, &value[4], 1, NULL/*&dwWritten*/, &osReadWrite);
+	// Sleep(delay);
+
+
+
+	// WriteFile(port, &address, 1, NULL/*&dwWritten*/, &osReadWrite);
+
+	// GetOverlappedResult(port, &osReadWrite, &lpNumberOfBytesTransferred, bWait);
+	// printf("lpNumberOfBytesTransferred = %d\n", lpNumberOfBytesTransferred);
+
+// /* Overlapped I/O operation is in progress. */
+// do {
+// 	dw = GetLastError();
+// 	printf("Last Error = %d\n", dw);
+// } while (/*ERROR_IO_PENDING*/997 == dw);
+    
+	// WriteFile(port, value, len, NULL/*&dwWritten*/, &osReadWrite);
+
+	// /* Overlapped I/O operation is in progress. */
+// do {
+// 	dw = GetLastError();
+// } while (/*ERROR_IO_PENDING*/997 == dw);
+
+	// GetOverlappedResult(port, &osReadWrite, &lpNumberOfBytesTransferred, bWait);
+	// printf("lpNumberOfBytesTransferred = %d\n", lpNumberOfBytesTransferred);
+
+	// Sleep(70);
+
+// if (dwWritten == len)
+// {
+// 	retVal = true;
+// }
+// else
+// {
+// 	retVal = false;
+// }
+
+// printf("dwWritten = %d\n", dwWritten);
+// printf("len       = %d\n", len);
+
+	// return retVal;
 }
 

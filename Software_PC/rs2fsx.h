@@ -69,6 +69,9 @@
 #define NAV1_FREQ_SWAP   0x02
 #define NAV2_FREQ_SWAP   0x01
 
+#define FSX_ADDR_RADIO_AUDIO_SWITCH  0x3122
+#define NAV1_SOUND  0x10
+#define NAV2_SOUND  0x08
 
 struct output_5_digit_t
 {
