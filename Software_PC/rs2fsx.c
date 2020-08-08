@@ -2,33 +2,33 @@
 * RadioStack to Flight Simulator X (rs2fsx) v2.0
 *************************************************************/
 #include <windows.h>
-#include <stdio.h>
-#include "conio.h"
-#include <stdint.h>
+#include <conio.h>
 #include <assert.h>
 
 #include "rs2fsx.h"
+#include "rs2fsx_comport.h"
 #include "rs2fsx_navcomm.h"
 
-
-HANDLE rs2fsx_open_port(char* com_port);
-bool rs2fsx_read_com_port(HANDLE port, OVERLAPPED osReadWrite, struct input_t *input);
 
 static void rs2fsx_command_interpreter(HANDLE port, OVERLAPPED osReadWrite, struct input_t input);
 static void rs2fsx_connect_fsx(void);
 static void rs2fsx_disconnect_fsx(void);
+static void rs2fsx_heartbeat(void);
+static void rs2fsx_init_display(HANDLE port, OVERLAPPED osReadWrite);
 
 
-int main(/*int argc, _TCHAR* argv[]*/)
+int main(int argc, _TCHAR* argv[])
 {
 	HANDLE port;
-
-	/* Number of sent bytes. */
-	DWORD dwWritten;
-
-	port = rs2fsx_open_port(COM_PORT);
-
+	struct input_t input = {INVALID_INPUT, INVALID_INPUT};
+	bool is_input_received = false;
 	OVERLAPPED osReadWrite = {0, };
+
+	if (argc < 2)
+	{
+		printf("ERROR: Not enough arguments. Please specify COM port (for example \"COM9\").\n");
+		exit(3);
+	}
 
   	osReadWrite.hEvent = CreateEvent
   	(
@@ -38,39 +38,25 @@ int main(/*int argc, _TCHAR* argv[]*/)
         NULL    /* No name.                     */
     );
 
-	rs2fsx_connect_fsx();
-	
-	uint16_t write = 0x2222;
-	DWORD Result;
-
-	FSUIPC_Write(FSX_ADDR_COM1_STBY, 2, &write, &Result);
-	FSUIPC_Process(&Result);
-
+	port = rs2fsx_comport_open(argv[1]);
 	WaitForSingleObject(osReadWrite.hEvent, TIMEOUT);
-
-	printf("Comm1_Act   Comm1_Stby   Nav1_Act   Nav1_Stby   Comm2_Act   Comm2_Stby   Nav2_Act   Nav2_Stby\n");
-
-	// WriteFile(port, &navcomm1.output.display.comm_stby.address, 1, &dwWritten, &osReadWrite);
-	// WriteFile(port, navcomm1.output.display.comm_stby.value, NAVCOMM_STRING_LEN, &dwWritten, &osReadWrite);
-	// Sleep(20);
-	
-	struct input_t input = {INVALID_INPUT, INVALID_INPUT};
-	bool is_input_received = false;
+	rs2fsx_connect_fsx();
+	rs2fsx_init_display(port, osReadWrite);
 
 	while (!_kbhit()) 
 	{ 
-		is_input_received = rs2fsx_read_com_port(port, osReadWrite, &input);
+		rs2fsx_heartbeat();
+
+		is_input_received = rs2fsx_comport_read(port, osReadWrite, &input);
 
 		if (true == is_input_received)
 		{
 			rs2fsx_command_interpreter(port, osReadWrite, input);
 		}
-
-		// rs2fsx_read_values_from_fsx();
 	}
 
 	rs2fsx_disconnect_fsx();	
-	CloseHandle(port);
+	rs2fsx_comport_close(port);
 
 	return 0;
 }
@@ -130,37 +116,49 @@ static void rs2fsx_command_interpreter(HANDLE port, OVERLAPPED osReadWrite, stru
 											 ADDR_DISP_NAV1_STBY);
 			break;
 
-// 		case ADDR_NAVCOMM2_BUT_TEST:
-// 			navcomm2.input.button.test.value = data.value;
-// 			break;
+		case ADDR_NAVCOMM2_BUT_TEST:
+			break;
 
-// 		case ADDR_NAVCOMM2_BUT_COMM_SWAP:
-// 			navcomm2.input.button.swap_comm.value = data.value;
-// 			break;
+		case ADDR_NAVCOMM2_BUT_COMM_SWAP:
+			break;
 
-// 		case ADDR_NAVCOMM2_BUT_IDENT:
-// 			navcomm2.input.button.ident.value = data.value;
-// 			break;
+		case ADDR_NAVCOMM2_BUT_IDENT:
+			break;
 
-// 		case ADDR_NAVCOMM2_BUT_NAV_SWAP:
-// 			navcomm2.input.button.swap_nav.value = data.value;
-// 			break;
+		case ADDR_NAVCOMM2_BUT_NAV_SWAP:
+			break;
 
-// 		case ADDR_NAVCOMM2_ENC_COMM_INTGR:
-// 			navcomm2.input.encoder.comm_intgr.value = data.value;
-// 			break;
+		case ADDR_NAVCOMM2_ENC_COMM_INTGR:
+			rs2fsx_navcomm_comm_intgr_process(port,
+											  osReadWrite,
+											  input.value,
+											  FSX_ADDR_COM2_STBY,
+											  ADDR_DISP_COMM2_STBY);
+			break;
 
-// 		case ADDR_NAVCOMM2_ENC_COMM_FRACT:
-// 			navcomm2.input.encoder.comm_fract.value = data.value;
-// 			break;
+		case ADDR_NAVCOMM2_ENC_COMM_FRACT:
+			rs2fsx_navcomm_comm_fract_process(port,
+											  osReadWrite,
+											  input.value,
+											  FSX_ADDR_COM2_STBY,
+											  ADDR_DISP_COMM2_STBY);
+			break;
 
-// 		case ADDR_NAVCOMM2_ENC_NAV_INTGR:
-// 			navcomm2.input.encoder.nav_intgr.value = data.value;
-// 			break;
+		case ADDR_NAVCOMM2_ENC_NAV_INTGR:
+			rs2fsx_navcomm_nav_intgr_process(port,
+											 osReadWrite,
+											 input.value,
+											 FSX_ADDR_NAV2_STBY,
+											 ADDR_DISP_NAV2_STBY);
+			break;
 
-// 		case ADDR_NAVCOMM2_ENC_NAV_FRACT:
-// 			navcomm2.input.encoder.nav_fract.value = data.value;
-// 			break;
+		case ADDR_NAVCOMM2_ENC_NAV_FRACT:
+			rs2fsx_navcomm_nav_fract_process(port,
+											 osReadWrite,
+											 input.value,
+											 FSX_ADDR_NAV2_STBY,
+											 ADDR_DISP_NAV2_STBY);
+			break;
 	}
 }
 
@@ -191,93 +189,77 @@ static void rs2fsx_disconnect_fsx(void)
 }
 
 
-/* Configure and open COM port. */
-HANDLE rs2fsx_open_port(char* com_port)
+static void rs2fsx_heartbeat(void)
 {
-	DCB dcb;
-	HANDLE hPort;
-	char port[11] = "\\\\.\\";
+	static uint16_t i = 0x0000;
 
-	strcat(port, com_port);
+	i++;
 
-	hPort = CreateFile
-	(
-		port,                          /* COM port number.                   */
-		GENERIC_READ | GENERIC_WRITE,  /* Access type (read and write).      */
-		0,                             /* Share (cannot share the COM port). */
-		NULL,                          /* Security (None).                   */
-		OPEN_EXISTING,                 /* Open existing COM port.            */
-		FILE_FLAG_OVERLAPPED,          /* Overlapped operation.              */
-		NULL                           /* No template file for COM port.     */
-	);
-
-	/* Set whole device control block (DCB) structure to zero. */
-	memset(&dcb, 0x00, sizeof(DCB));
-
-	/* COM port settings. */
-	dcb.DCBlength = sizeof(DCB);
-	dcb.BaudRate =  9600;
-	dcb.ByteSize =  8;
-	dcb.Parity =    NOPARITY;
-	dcb.StopBits =  ONESTOPBIT;
-
-	SetCommState(hPort, &dcb);
-
-	if (true == SetCommState(hPort, &dcb))
+	if (0xCFFF < i)
 	{
-		printf("Port %s open successfully.\n", com_port);
-	}
-	else
-	{
-		printf("ERROR: Unable to open %s!!\n", com_port);
-		CloseHandle(hPort);
-		getchar();
-		exit(1);
+		i = 0x0000;
 	}
 
-	/* Set type of event to process. */
-	SetCommMask(hPort, EV_RXCHAR);
+	switch (i)
+	{
+		case 0x0000:
+			printf("\r     ");
+			break;
 
-	return hPort;
+		case 0x3FFF:
+			printf("\r.");
+			break;
+
+		case 0x6FFF:
+			printf("\r..");
+			break;
+
+		case 0x9FFF:
+			printf("\r...");
+			break;
+	}
 }
 
 
-/* Asynchronous reading of COM port. Check if there is any incomming data. If yes then read
-   two bytes (button address and it`s value). */
-bool rs2fsx_read_com_port(HANDLE port, OVERLAPPED osReadWrite, struct input_t *input)
+static void rs2fsx_init_display(HANDLE port, OVERLAPPED osReadWrite)
 {
-	DWORD dwRead;
-	bool retVal = false;
+	DWORD Result;
+	uint8_t value[8u][5u];
+	uint16_t value_fsx[8u];
 
-	input->address = INVALID_INPUT;
-	input->value =   INVALID_INPUT;
+	/* Read values from FSX. */
+	FSUIPC_Read(FSX_ADDR_COM1_ACT,  2u, &value_fsx[0u], &Result);
+	FSUIPC_Read(FSX_ADDR_COM1_STBY, 2u, &value_fsx[1u], &Result);
+	FSUIPC_Read(FSX_ADDR_NAV1_ACT,  2u, &value_fsx[2u], &Result);
+	FSUIPC_Read(FSX_ADDR_NAV1_STBY, 2u, &value_fsx[3u], &Result);
 
-	/* Asynchronously read first byte (address of a button). */
-	retVal = ReadFile(port, &input->address, 1, &dwRead, &osReadWrite);
-	if ((true == retVal) && (INVALID_INPUT != input->address))
-	{
-		do {
-			/* Asynchronously read second byte (value of a button). */
-			retVal = ReadFile(port, &input->value, 1, &dwRead, &osReadWrite);
-		} while ((false == retVal) || (INVALID_INPUT == input->value));
-	}
+	FSUIPC_Read(FSX_ADDR_COM2_ACT,  2u, &value_fsx[4u], &Result);
+	FSUIPC_Read(FSX_ADDR_COM2_STBY, 2u, &value_fsx[5u], &Result);
+	FSUIPC_Read(FSX_ADDR_NAV2_ACT,  2u, &value_fsx[6u], &Result);
+	FSUIPC_Read(FSX_ADDR_NAV2_STBY, 2u, &value_fsx[7u], &Result);
 
-	if ((INVALID_INPUT != input->address) && (INVALID_INPUT != input->value))
-	{
-		retVal = true;
-	}
+	FSUIPC_Process(&Result);
 
-	return retVal;
-}
+	/* Convert read values to a string form. */
+	rs2fsx_navcomm_convert_bcd_to_char(value_fsx[0u], value[0u]);
+	rs2fsx_navcomm_convert_bcd_to_char(value_fsx[1u], value[1u]);
+	rs2fsx_navcomm_convert_bcd_to_char(value_fsx[2u], value[2u]);
+	rs2fsx_navcomm_convert_bcd_to_char(value_fsx[3u], value[3u]);
 
+	rs2fsx_navcomm_convert_bcd_to_char(value_fsx[4u], value[4u]);
+	rs2fsx_navcomm_convert_bcd_to_char(value_fsx[5u], value[5u]);
+	rs2fsx_navcomm_convert_bcd_to_char(value_fsx[6u], value[6u]);
+	rs2fsx_navcomm_convert_bcd_to_char(value_fsx[7u], value[7u]);
 
-bool rs2fsx_write_comport(HANDLE port, OVERLAPPED osReadWrite, uint8_t address, uint8_t *value, uint8_t len)
-{
-	DWORD dwWritten;
+	/* Write values to RadioStack. */
+	rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_COMM1_ACT,  value[0u], NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_COMM1_STBY, value[1u], NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_NAV1_ACT,   value[2u], NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_NAV1_STBY,  value[3u], NAVCOMM_STRING_LEN);
 
-	WriteFile(port, &address, 1, &dwWritten, &osReadWrite);
-	WriteFile(port, value, len, &dwWritten, &osReadWrite);
-
-	Sleep(20);
+	rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_COMM2_ACT,  value[4u], NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_COMM2_STBY, value[5u], NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_NAV2_ACT,   value[6u], NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_NAV2_STBY,  value[7u], NAVCOMM_STRING_LEN);
 }
 

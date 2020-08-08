@@ -2,7 +2,7 @@
 #define __RS2FSX_NAVCOMM__
 
 #include "rs2fsx.h"
-
+#include "rs2fsx_comport.h"
 
 /* Numbers of I/O items in NavComm module. */
 #define NAVCOMM_STRING_LEN      5u

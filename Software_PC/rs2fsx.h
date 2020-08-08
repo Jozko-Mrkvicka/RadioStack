@@ -2,6 +2,7 @@
 #define __RS2FSX__
 
 #include <windows.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -72,8 +73,7 @@
 struct output_5_digit_t
 {
 	uint8_t address;
-	uint8_t value[5/*NAVCOMM_STRING_LEN*/];
-	// uint8_t value_old[NAVCOMM_STRING_LEN];
+	uint8_t value[5];
 };
 
 struct input_t
@@ -82,7 +82,5 @@ struct input_t
 	uint8_t value;
 };
 
-
-bool rs2fsx_write_comport(HANDLE port, OVERLAPPED osReadWrite, uint8_t address, uint8_t *value, uint8_t len);
 
 #endif

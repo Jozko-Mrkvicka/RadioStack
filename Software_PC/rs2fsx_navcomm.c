@@ -30,7 +30,7 @@ void rs2fsx_navcomm_comm_intgr_process(HANDLE port,
 	FSUIPC_Process(&Result);
 
 	rs2fsx_navcomm_convert_bcd_to_char(freq, value);
-	rs2fsx_write_comport(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
 }
 
 
@@ -129,7 +129,7 @@ void rs2fsx_navcomm_comm_fract_process(HANDLE port,
 	FSUIPC_Process(&Result);
 
 	rs2fsx_navcomm_convert_bcd_to_char(freq, value);
-	rs2fsx_write_comport(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
 }
 
 
@@ -259,7 +259,7 @@ void rs2fsx_navcomm_nav_intgr_process(HANDLE port,
 	FSUIPC_Process(&Result);
 
 	rs2fsx_navcomm_convert_bcd_to_char(freq, value);
-	rs2fsx_write_comport(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
 }
 
 
@@ -356,7 +356,7 @@ void rs2fsx_navcomm_nav_fract_process(HANDLE port,
 	FSUIPC_Process(&Result);
 
 	rs2fsx_navcomm_convert_bcd_to_char(freq, value);
-	rs2fsx_write_comport(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
+	rs2fsx_comport_write(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
 }
 
 
