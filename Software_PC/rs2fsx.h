@@ -14,7 +14,7 @@
 #define ENC_TURN_RIGHT  1u
 #define ENC_TURN_LEFT   2u
 
-#define COM_PORT  "COM9"
+// #define COM_PORT  "COM9"
 
 #define INVALID_INPUT 0xFF
 
@@ -73,6 +73,9 @@
 #define NAV1_SOUND  0x10
 #define NAV2_SOUND  0x08
 
+#define FSX_ADDR_READY_TO_FLY  0x3364
+
+
 struct output_5_digit_t
 {
 	uint8_t address;
@@ -84,6 +87,5 @@ struct input_t
 	uint8_t address;
 	uint8_t value;
 };
-
 
 #endif

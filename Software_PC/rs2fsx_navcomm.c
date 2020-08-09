@@ -5,14 +5,10 @@
 void rs2fsx_navcomm_comm_intgr(HANDLE port,
 									  OVERLAPPED osReadWrite,
 									  uint8_t direction,
-									  uint16_t fsx_addr,
-									  uint8_t rs_addr)
+									  uint16_t fsx_addr)
 {
 	DWORD Result;
 	uint16_t freq;
-	uint8_t value[NAVCOMM_STRING_LEN];
-	/*bool retVal;*/
-
 
 	FSUIPC_Read(fsx_addr, 2, &freq, &Result);
 	FSUIPC_Process(&Result);
@@ -29,12 +25,6 @@ void rs2fsx_navcomm_comm_intgr(HANDLE port,
 
 	FSUIPC_Write(fsx_addr, 2, &freq, &Result);
 	FSUIPC_Process(&Result);
-
-	rs2fsx_navcomm_convert_bcd_to_char(freq, value);
-	/*retVal =*/ rs2fsx_comport_write(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
-
-	// if (retVal != true)
-	// 	printf("ERROR\n");
 }
 
 
@@ -54,9 +44,7 @@ void rs2fsx_navcomm_comm_intgr_add(uint16_t* sum)
 	}
 	else
 	{
-		/* Display "EE" (error). */
-		// digit1 = 0x0E;
-		// digit2 = 0x0E;
+		/* Error, do nothing. */
 	}
 
 	/* Overflow of integer part of COMM frequency. */
@@ -87,9 +75,7 @@ void rs2fsx_navcomm_comm_intgr_sub(uint16_t* sum)
 	}
 	else
 	{
-		/* Display "EE" (error). */
-		// digit1 = 0x0E;
-		// digit2 = 0x0E;
+		/* Error, do nothing. */
 	}
 
 	/* Underflow of integer part of COMM frequency. */
@@ -108,14 +94,11 @@ void rs2fsx_navcomm_comm_intgr_sub(uint16_t* sum)
 void rs2fsx_navcomm_comm_fract(HANDLE port,
 									  OVERLAPPED osReadWrite,
 									  uint8_t direction,
-									  uint16_t fsx_addr,
-									  uint8_t rs_addr)
+									  uint16_t fsx_addr)
 {
 	DWORD Result;
 	uint16_t freq;
 	uint8_t delta;
-	uint8_t value[NAVCOMM_STRING_LEN];
-
 
 	FSUIPC_Read(fsx_addr, 2, &freq, &Result);
 	FSUIPC_Process(&Result);
@@ -133,9 +116,6 @@ void rs2fsx_navcomm_comm_fract(HANDLE port,
 
 	FSUIPC_Write(fsx_addr, 2, &freq, &Result);
 	FSUIPC_Process(&Result);
-
-	rs2fsx_navcomm_convert_bcd_to_char(freq, value);
-	rs2fsx_comport_write(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
 }
 
 
@@ -189,9 +169,7 @@ void rs2fsx_navcomm_comm_fract_add(uint16_t* sum, uint8_t num)
 	}
 	else
 	{
-		/* Display "EE" (error). */
-		// digit1 = 0x0E;
-		// digit2 = 0x0E;
+		/* Error, do nothing. */
 	}
 
 	if (digit2 == 10)
@@ -221,9 +199,7 @@ void rs2fsx_navcomm_comm_fract_sub(uint16_t* sum, uint8_t num)
 	}
 	else
 	{
-		/* Display "EE" (error). */
-		// digit1 = 0x0E;
-		// digit2 = 0x0E;
+		/* Error, do nothing. */
 	}
 
 	if (digit2 < 0)
@@ -241,12 +217,10 @@ void rs2fsx_navcomm_comm_fract_sub(uint16_t* sum, uint8_t num)
 void rs2fsx_navcomm_nav_intgr(HANDLE port,
 									  OVERLAPPED osReadWrite,
 									  uint8_t direction,
-									  uint16_t fsx_addr,
-									  uint8_t rs_addr)
+									  uint16_t fsx_addr)
 {
 	DWORD Result;
 	uint16_t freq;
-	uint8_t value[NAVCOMM_STRING_LEN];
 
 	FSUIPC_Read(fsx_addr, 2, &freq, &Result);
 	FSUIPC_Process(&Result);
@@ -263,9 +237,6 @@ void rs2fsx_navcomm_nav_intgr(HANDLE port,
 
 	FSUIPC_Write(fsx_addr, 2, &freq, &Result);
 	FSUIPC_Process(&Result);
-
-	rs2fsx_navcomm_convert_bcd_to_char(freq, value);
-	rs2fsx_comport_write(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
 }
 
 
@@ -285,9 +256,7 @@ void rs2fsx_navcomm_nav_intgr_add(uint16_t* sum)
 	}
 	else
 	{
-		/* Display "EE" (error). */
-		// digit1 = 0x0E;
-		// digit2 = 0x0E;
+		/* Error, do nothing. */
 	}
 
 	/* Overflow of integer part of NAV frequency. */
@@ -318,9 +287,7 @@ void rs2fsx_navcomm_nav_intgr_sub(uint16_t* sum)
 	}
 	else
 	{
-		/* Display "EE" (error). */
-		// digit1 = 0x0E;
-		// digit2 = 0x0E;
+		/* Error, do nothing. */
 	}
 
 	/* Underflow of integer part of NAV frequency. */
@@ -339,13 +306,10 @@ void rs2fsx_navcomm_nav_intgr_sub(uint16_t* sum)
 void rs2fsx_navcomm_nav_fract(HANDLE port,
 									  OVERLAPPED osReadWrite,
 									  uint8_t direction,
-									  uint16_t fsx_addr,
-									  uint8_t rs_addr)
+									  uint16_t fsx_addr)
 {
 	DWORD Result;
 	uint16_t freq;
-	uint8_t value[NAVCOMM_STRING_LEN];
-
 
 	FSUIPC_Read(fsx_addr, 2, &freq, &Result);
 	FSUIPC_Process(&Result);
@@ -362,9 +326,6 @@ void rs2fsx_navcomm_nav_fract(HANDLE port,
 
 	FSUIPC_Write(fsx_addr, 2, &freq, &Result);
 	FSUIPC_Process(&Result);
-
-	rs2fsx_navcomm_convert_bcd_to_char(freq, value);
-	rs2fsx_comport_write(port, osReadWrite, rs_addr, value, NAVCOMM_STRING_LEN);
 }
 
 
@@ -384,9 +345,7 @@ void rs2fsx_navcomm_nav_fract_add(uint16_t* sum)
 	}
 	else
 	{
-		/* Display "EE" (error). */
-		// digit1 = 0x0E;
-		// digit2 = 0x0E;
+		/* Error, do nothing. */
 	}
 
 	if (digit2 == 10)
@@ -416,9 +375,7 @@ void rs2fsx_navcomm_nav_fract_sub(uint16_t* sum)
 	}
 	else
 	{
-		/* Display "EE" (error). */
-		// digit1 = 0x0E;
-		// digit2 = 0x0E;
+		/* Error, do nothing. */
 	}
 
 	if (digit2 < 0)
@@ -443,61 +400,6 @@ void rs2fsx_navcomm_comm_swap(HANDLE port,
 
 	FSUIPC_Write(FSX_ADDR_NAVCOMM_FREQ_SWAP, 1u, &fsx_value, &Result);
 	FSUIPC_Process(&Result);
-
-	switch (fsx_value)
-	{
-		case COMM1_FREQ_SWAP:
-			FSUIPC_Read(FSX_ADDR_COM1_ACT,  2u, &value_fsx[0u], &Result);
-			FSUIPC_Read(FSX_ADDR_COM1_STBY, 2u, &value_fsx[1u], &Result);
-
-			FSUIPC_Process(&Result);
-
-			rs2fsx_navcomm_convert_bcd_to_char(value_fsx[0u], value[0u]);
-			rs2fsx_navcomm_convert_bcd_to_char(value_fsx[1u], value[1u]);
-
-			rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_COMM1_STBY, value[0u], NAVCOMM_STRING_LEN);
-			rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_COMM1_ACT,  value[1u], NAVCOMM_STRING_LEN);
-			break;
-
-		case NAV1_FREQ_SWAP:
-			FSUIPC_Read(FSX_ADDR_NAV1_ACT,  2u, &value_fsx[0u], &Result);
-			FSUIPC_Read(FSX_ADDR_NAV1_STBY, 2u, &value_fsx[1u], &Result);
-
-			FSUIPC_Process(&Result);
-
-			rs2fsx_navcomm_convert_bcd_to_char(value_fsx[0u], value[0u]);
-			rs2fsx_navcomm_convert_bcd_to_char(value_fsx[1u], value[1u]);
-
-			rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_NAV1_STBY, value[0u], NAVCOMM_STRING_LEN);
-			rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_NAV1_ACT,  value[1u], NAVCOMM_STRING_LEN);
-			break;
-
-		case COMM2_FREQ_SWAP:
-			FSUIPC_Read(FSX_ADDR_COM2_ACT,  2u, &value_fsx[0u], &Result);
-			FSUIPC_Read(FSX_ADDR_COM2_STBY, 2u, &value_fsx[1u], &Result);
-
-			FSUIPC_Process(&Result);
-
-			rs2fsx_navcomm_convert_bcd_to_char(value_fsx[0u], value[0u]);
-			rs2fsx_navcomm_convert_bcd_to_char(value_fsx[1u], value[1u]);
-
-			rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_COMM2_STBY, value[0u], NAVCOMM_STRING_LEN);
-			rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_COMM2_ACT,  value[1u], NAVCOMM_STRING_LEN);
-			break;
-
-		case NAV2_FREQ_SWAP:
-			FSUIPC_Read(FSX_ADDR_NAV2_ACT,  2u, &value_fsx[0u], &Result);
-			FSUIPC_Read(FSX_ADDR_NAV2_STBY, 2u, &value_fsx[1u], &Result);
-
-			FSUIPC_Process(&Result);
-
-			rs2fsx_navcomm_convert_bcd_to_char(value_fsx[0u], value[0u]);
-			rs2fsx_navcomm_convert_bcd_to_char(value_fsx[1u], value[1u]);
-
-			rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_NAV2_STBY, value[0u], NAVCOMM_STRING_LEN);
-			rs2fsx_comport_write(port, osReadWrite, ADDR_DISP_NAV2_ACT,  value[1u], NAVCOMM_STRING_LEN);
-			break;
-	}
 }
 
 
